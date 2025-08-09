@@ -1,0 +1,7 @@
+.wwebjs_auth/
+.wwebjs_cache/
+**/puppeteer-core/.local-chromium/
+node_modules/
+.env
+secrets.toml
+start.bat
