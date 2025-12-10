@@ -75,6 +75,15 @@ def gerar_links_anexos(conteudo, preprompt):
     )
     return chat_with_bot(prompt_links, preprompt)
 
+def revisar_texto(conteudo, preprompt):
+    prompt_revisao = (
+        "Revisão ortográfica e de coerência\n\n"
+        "Revise o texto abaixo corrigindo erros ortográficos, gramaticais e problemas de coerência. "
+        "Mantenha o sentido original, melhore a fluidez e entregue apenas o texto revisado.\n\nTexto:\n"
+        + conteudo
+    )
+    return chat_with_bot(prompt_revisao, preprompt)
+
 st.set_page_config(page_title="Escriba - Gerador de Módulo", layout="wide")
 st.title("Escriba - Gerador de Módulo Educacional")
 
@@ -88,10 +97,12 @@ if "cache" not in st.session_state:
 def build_texto_final(secoes):
     return "\n\n".join(secoes)
 
+# coloque o uploader fora do form para que outros botões possam acessá-lo imediatamente
+arquivo = st.file_uploader("Envie um arquivo (.pdf, .txt, .docx)", type=["pdf", "txt", "docx"], key="arquivo")
+
 with st.form("generate_form"):
     st.header("Parâmetros")
     tema_geral = st.text_input("Digite uma breve descrição do tema geral:", key="tema")
-    arquivo = st.file_uploader("Envie um arquivo (.pdf, .txt, .docx)", type=["pdf", "txt", "docx"], key="arquivo")
     idioma = st.selectbox("Idioma de saída", ["Português", "Inglês"], key="idioma")
 
     st.markdown("**Seções a gerar (marque as que desejar):**")
@@ -103,124 +114,162 @@ with st.form("generate_form"):
     gerar_conclusao = st.checkbox("Conclusão (Seção 5)", value=True, key="opt_conclusao")
     gerar_referencias = st.checkbox("Referências (Seção 6)", value=True, key="opt_referencias")
 
-    submitted = st.form_submit_button("Processar")
+    col1, col2 = st.columns([1,1])
+    with col1:
+        gerar_btn = st.form_submit_button("Gerar módulo")
+    with col2:
+        st.write("")  # espaço para alinhamento; botão de revisão fica fora do form
 
-if submitted:
-    if not tema_geral:
-        st.error("Preencha a descrição do tema geral antes de processar.")
-    elif not arquivo:
-        st.error("Envie um arquivo antes de processar.")
+# botão de revisão usando o arquivo (fora do form para evitar conflito de submit)
+revisar_pdf_btn = st.button("Revisar ortografia (usar PDF)")
+
+if revisar_pdf_btn:
+    if not arquivo:
+        st.error("Envie um arquivo PDF para revisão.")
     else:
-        if not any([gerar_resumo, gerar_introducao, gerar_unidades, gerar_glossario_opt, gerar_links_opt, gerar_conclusao, gerar_referencias]):
-            st.error("Selecione ao menos uma seção para gerar.")
+        arquivo.seek(0)
+        ext = arquivo.name.split(".")[-1].lower()
+        if ext != "pdf":
+            st.error("A revisão via PDF exige um arquivo .pdf. Para outros formatos, use a revisão de texto.")
         else:
+            file_bytes = arquivo.read()
+            file_like = BytesIO(file_bytes)
+            texto_pdf = ler_pdf(file_like)
+            preprompt = criar_preprompt(f"Tema geral: {tema_geral}\n\n{texto_pdf}", idioma)
+            revisado = revisar_texto(texto_pdf, preprompt)
+            st.success("Revisão do PDF concluída.")
+            st.text_area("Texto revisado (do PDF)", revisado, height=400)
+            st.download_button(
+                "📄 Baixar revisão (TXT)",
+                revisado,
+                file_name="revisao_pdf.txt",
+                mime="text/plain"
+            )
+
+if gerar_btn:
+    if not tema_geral and not arquivo:
+        st.error("Preencha a descrição do tema geral ou envie um arquivo antes de processar.")
+    else:
+        if arquivo:
             arquivo.seek(0)
             file_bytes = arquivo.read()
             file_hash = hashlib.sha256(file_bytes).hexdigest()
-            opts = [
-                ("R" if gerar_resumo else "-"),
-                ("I" if gerar_introducao else "-"),
-                ("U" if gerar_unidades else "-"),
-                ("G" if gerar_glossario_opt else "-"),
-                ("L" if gerar_links_opt else "-"),
-                ("C" if gerar_conclusao else "-"),
-                ("F" if gerar_referencias else "-"),
-            ]
-            opts_tag = "".join(opts)
-            cache_key = f"{file_hash}__{tema_geral.strip()}__{idioma}__{opts_tag}"
-
-            if cache_key in st.session_state["cache"]:
-                st.success("Conteúdo carregado do cache.")
-                st.session_state["texto_final"] = st.session_state["cache"][cache_key]
+            file_like = BytesIO(file_bytes)
+            ext = arquivo.name.split(".")[-1].lower()
+            if ext == "pdf":
+                texto_origem = ler_pdf(file_like)
+            elif ext == "txt":
+                texto_origem = ler_txt(file_like)
+            elif ext == "docx":
+                texto_origem = ler_docx(file_like)
             else:
-                st.session_state["conteudo_modulo"] = []
-                progress = st.progress(0)
-                step = 0
-                total_steps = 1 + sum([gerar_resumo, gerar_introducao, gerar_unidades, gerar_glossario_opt, gerar_links_opt, gerar_conclusao, gerar_referencias])
-                progress.progress(0)
+                st.error("Formato de arquivo não suportado.")
+                st.stop()
+        else:
+            texto_origem = ""
 
-                file_like = BytesIO(file_bytes)
-                ext = arquivo.name.split(".")[-1].lower()
-                if ext == "pdf":
-                    texto_origem = ler_pdf(file_like)
-                elif ext == "txt":
-                    texto_origem = ler_txt(file_like)
-                elif ext == "docx":
-                    texto_origem = ler_docx(file_like)
+        preprompt = criar_preprompt(f"Tema geral: {tema_geral}\n\n{texto_origem}", idioma)
+
+        # usar o botão de revisão externo (revisar_pdf_btn)
+        if revisar_pdf_btn:
+            conteudo_base = texto_origem if texto_origem.strip() else tema_geral
+            st.session_state["texto_revisado"] = revisar_texto(conteudo_base, preprompt)
+            st.success("Revisão concluída.")
+            st.text_area("Texto revisado", st.session_state["texto_revisado"], height=300)
+            st.download_button(
+                "📄 Baixar revisão (TXT)",
+                st.session_state["texto_revisado"],
+                file_name="texto_revisado.txt",
+                mime="text/plain",
+                key="download-revisado"
+            )
+
+        if gerar_btn:
+            if not any([gerar_resumo, gerar_introducao, gerar_unidades, gerar_glossario_opt, gerar_links_opt, gerar_conclusao, gerar_referencias]):
+                st.error("Selecione ao menos uma seção para gerar.")
+            else:
+                opts = [
+                    ("R" if gerar_resumo else "-"),
+                    ("I" if gerar_introducao else "-"),
+                    ("U" if gerar_unidades else "-"),
+                    ("G" if gerar_glossario_opt else "-"),
+                    ("L" if gerar_links_opt else "-"),
+                    ("C" if gerar_conclusao else "-"),
+                    ("F" if gerar_referencias else "-"),
+                ]
+                opts_tag = "".join(opts)
+                cache_key = f"{file_hash if arquivo else 'no_file'}__{tema_geral.strip()}__{idioma}__{opts_tag}"
+
+                if cache_key in st.session_state["cache"]:
+                    st.success("Conteúdo carregado do cache.")
+                    st.session_state["texto_final"] = st.session_state["cache"][cache_key]
                 else:
-                    st.error("Formato de arquivo não suportado.")
-                    st.stop()
-                step += 1
-                progress.progress(int(step / total_steps * 100))
-
-                preprompt = criar_preprompt(f"Tema geral: {tema_geral}\n\n{texto_origem}", idioma)
-
-                # Seção 0 - Resumo geral aprofundado (opcional)
-                if gerar_resumo:
-                    prompt_resumo = (
-                        "Seção 0. Resumo geral aprofundado\n\n"
-                        "Faça um resumo aprofundado do material, sintetizando os pontos principais e destacando aplicações práticas."
-                    )
-                    conteudo_resumo = chat_with_bot(prompt_resumo, preprompt)
-                    st.session_state["conteudo_modulo"].append("Seção 0. Resumo geral aprofundado\n" + conteudo_resumo)
+                    st.session_state["conteudo_modulo"] = []
+                    progress = st.progress(0)
+                    step = 0
+                    total_steps = 1 + sum([gerar_resumo, gerar_introducao, gerar_unidades, gerar_glossario_opt, gerar_links_opt, gerar_conclusao, gerar_referencias])
                     step += 1
                     progress.progress(int(step / total_steps * 100))
 
-                # Seção 1 - Introdução
-                if gerar_introducao:
-                    prompt_introducao = (
-                        "Seção 1. Introdução ao conteúdo\n\n"
-                        "Redija um texto introdutório para um módulo educacional com pelo menos 3 parágrafos."
-                    )
-                    conteudo_introducao = chat_with_bot(prompt_introducao, preprompt)
-                    st.session_state["conteudo_modulo"].append("Seção 1. Introdução ao conteúdo\n" + conteudo_introducao)
-                    step += 1
-                    progress.progress(int(step / total_steps * 100))
+                    if gerar_resumo:
+                        prompt_resumo = (
+                            "Seção 0. Resumo geral aprofundado\n\n"
+                            "Faça um resumo aprofundado do material, sintetizando os pontos principais e destacando aplicações práticas."
+                        )
+                        conteudo_resumo = chat_with_bot(prompt_resumo, preprompt)
+                        st.session_state["conteudo_modulo"].append("Seção 0. Resumo geral aprofundado\n" + conteudo_resumo)
+                        step += 1
+                        progress.progress(int(step / total_steps * 100))
 
-                # Seção 2 - Unidades
-                if gerar_unidades:
-                    prompt_unidades = "Seção 2. Unidades de aprendizagem do Módulo\n\nDesenvolva as unidades principais."
-                    conteudo_unidades = chat_with_bot(prompt_unidades, preprompt)
-                    st.session_state["conteudo_modulo"].append("Seção 2. Unidades de aprendizagem do Módulo\n" + conteudo_unidades)
-                    step += 1
-                    progress.progress(int(step / total_steps * 100))
+                    if gerar_introducao:
+                        prompt_introducao = (
+                            "Seção 1. Introdução ao conteúdo\n\n"
+                            "Redija um texto introdutório para um módulo educacional com pelo menos 3 parágrafos."
+                        )
+                        conteudo_introducao = chat_with_bot(prompt_introducao, preprompt)
+                        st.session_state["conteudo_modulo"].append("Seção 1. Introdução ao conteúdo\n" + conteudo_introducao)
+                        step += 1
+                        progress.progress(int(step / total_steps * 100))
 
-                # Seção 3 - Glossário
-                if gerar_glossario_opt:
-                    conteudo_para_glossario = f"{tema_geral}\n{texto_origem}"
-                    conteudo_glossario = gerar_glossario(conteudo_para_glossario, preprompt)
-                    st.session_state["conteudo_modulo"].append("Seção 3. Glossário geral\n" + conteudo_glossario)
-                    step += 1
-                    progress.progress(int(step / total_steps * 100))
+                    if gerar_unidades:
+                        prompt_unidades = "Seção 2. Unidades de aprendizagem do Módulo\n\nDesenvolva as unidades principais."
+                        conteudo_unidades = chat_with_bot(prompt_unidades, preprompt)
+                        st.session_state["conteudo_modulo"].append("Seção 2. Unidades de aprendizagem do Módulo\n" + conteudo_unidades)
+                        step += 1
+                        progress.progress(int(step / total_steps * 100))
 
-                # Seção 4 - Links e anexos
-                if gerar_links_opt:
-                    conteudo_links = gerar_links_anexos(texto_origem, preprompt)
-                    st.session_state["conteudo_modulo"].append("Seção 4. Links de materiais complementares e anexos\n" + conteudo_links)
-                    step += 1
-                    progress.progress(int(step / total_steps * 100))
+                    if gerar_glossario_opt:
+                        conteudo_para_glossario = f"{tema_geral}\n{texto_origem}"
+                        conteudo_glossario = gerar_glossario(conteudo_para_glossario, preprompt)
+                        st.session_state["conteudo_modulo"].append("Seção 3. Glossário geral\n" + conteudo_gllossario if False else "Seção 3. Glossário geral\n" + conteudo_glossario)
+                        step += 1
+                        progress.progress(int(step / total_steps * 100))
 
-                # Seção 5 - Conclusão
-                if gerar_conclusao:
-                    prompt_conclusao = "Seção 5. Unidade de conclusão do módulo\n\nResuma e incentive a aplicação do conhecimento."
-                    conteudo_conclusao = chat_with_bot(prompt_conclusao, preprompt)
-                    st.session_state["conteudo_modulo"].append("Seção 5. Unidade de conclusão do módulo\n" + conteudo_conclusao)
-                    step += 1
-                    progress.progress(int(step / total_steps * 100))
+                    if gerar_links_opt:
+                        conteudo_links = gerar_links_anexos(texto_origem, preprompt)
+                        st.session_state["conteudo_modulo"].append("Seção 4. Links de materiais complementares e anexos\n" + conteudo_links)
+                        step += 1
+                        progress.progress(int(step / total_steps * 100))
 
-                # Seção 6 - Referências
-                if gerar_referencias:
-                    prompt_referencias = "Seção 6. Referências do Módulo\n\nExtraia referências presentes no conteúdo."
-                    conteudo_referencias = chat_with_bot(prompt_referencias, preprompt)
-                    st.session_state["conteudo_modulo"].append("Seção 6. Referências do Módulo\n" + conteudo_referencias)
-                    step += 1
-                    progress.progress(int(step / total_steps * 100))
+                    if gerar_conclusao:
+                        prompt_conclusao = "Seção 5. Unidade de conclusão do módulo\n\nResuma e incentive a aplicação do conhecimento."
+                        conteudo_conclusao = chat_with_bot(prompt_conclusao, preprompt)
+                        st.session_state["conteudo_modulo"].append("Seção 5. Unidade de conclusão do módulo\n" + conteudo_conclusao)
+                        step += 1
+                        progress.progress(int(step / total_steps * 100))
 
-                texto_final = build_texto_final(st.session_state["conteudo_modulo"])
-                st.session_state["texto_final"] = texto_final
-                st.session_state["cache"][cache_key] = texto_final
-                progress.progress(100)
-                st.success("Geração concluída.")
+                    if gerar_referencias:
+                        prompt_referencias = "Seção 6. Referências do Módulo\n\nExtraia referências presentes no conteúdo."
+                        conteudo_referencias = chat_with_bot(prompt_referencias, preprompt)
+                        st.session_state["conteudo_modulo"].append("Seção 6. Referências do Módulo\n" + conteudo_referencias)
+                        step += 1
+                        progress.progress(int(step / total_steps * 100))
+
+                    texto_final = build_texto_final(st.session_state["conteudo_modulo"])
+                    st.session_state["texto_final"] = texto_final
+                    st.session_state["cache"][cache_key] = texto_final
+                    progress.progress(100)
+                    st.success("Geração concluída.")
 
 if st.session_state.get("texto_final"):
     st.markdown("---")
