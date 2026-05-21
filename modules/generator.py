@@ -43,7 +43,7 @@ def _build_system_prompt() -> str:
     )
 
 
-def _chamar_api(client, modelo: str, system_prompt: str, user_prompt: str) -> str:
+def _chamar_api(client, modelo: str, system_prompt: str, user_prompt: str, max_tokens: int = 2048) -> str:
     """Chama a API Maritaca com o modelo especificado."""
     try:
         response = client.chat.completions.create(
@@ -53,7 +53,7 @@ def _chamar_api(client, modelo: str, system_prompt: str, user_prompt: str) -> st
                 {"role": "user", "content": user_prompt},
             ],
             temperature=0.5,   # Temperatura baixa para maior fidelidade
-            max_tokens=2048,
+            max_tokens=max_tokens,
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -87,8 +87,9 @@ def generate(
     # [Passo 1] Agente Classificador Global
     contexto_estruturado = categorize_knowledge_base(texto_fatos, api_key, status_callback)
     
-    # Trava Mestra Injetada
+    # Trava Mestra Injetada + max_tokens do template (default 2048)
     system_prompt = template.get("system_prompt", _build_system_prompt())
+    max_tokens_template = int(template.get("max_tokens_geracao", 2048))
     
     secoes_template = {s["id"]: s for s in template.get("secoes", [])}
     resultados = []
@@ -164,7 +165,7 @@ def generate(
             max_retries = 2
             texto_gerado_sub = ""
             while tentativas <= max_retries:
-                texto_gerado_sub = _chamar_api(client, modelo_geracao, system_prompt, user_prompt + material_inj)
+                texto_gerado_sub = _chamar_api(client, modelo_geracao, system_prompt, user_prompt + material_inj, max_tokens=max_tokens_template)
                 falhas = [e for e in entidades_obrig if str(e).lower() not in texto_gerado_sub.lower()]
                 if not falhas: break
                 

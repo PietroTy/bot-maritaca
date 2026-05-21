@@ -1,0 +1,109 @@
+{
+  "id": "capitulo_1_tese",
+  "nome": "Tese — Capítulo 1 (Educação, Currículo e Práticas Curriculares na EJA)",
+  "descricao": "Geração do Capítulo 1 da tese de doutorado por Micro-Chunking iterativo. Meta: ~40 páginas de escrita acadêmica densa, articulando educação, currículo crítico e práticas curriculares dos professores da EJA. Requer: 1 arquivo com o material-fonte (base teórica do cap. 1 gerado no Streamlit) e 1 arquivo 'tese_modelo' com a introdução já produzida para guiar o tom e o estilo.",
+  "requisitos": "Envidar dois arquivos: (1) Fatos do Cap.1 — o texto base enviado pelo Streamlit com todo o referencial teórico; (2) Modelo — a Introdução já produzida da tese (qualquer arquivo com 'modelo', 'tese' ou 'formato' no nome). O material-fonte guia o CONTEÚDO; o modelo guia o ESTILO e o TOM.",
+  "norma": "ABNT / Acadêmica / Pós-Graduação",
+  "prioridade": 1,
+  "status": "funcional",
+  "max_tokens_geracao": 4096,
+  "system_prompt": "Você é um assistente acadêmico especializado na escrita de teses de Doutorado em Educação no Brasil, seguindo rigorosamente as normas ABNT. Você está redigindo o CAPÍTULO 1 de uma tese cujo tema central é a questão socioambiental na Educação de Jovens e Adultos (EJA) no contexto do Pacto Nacional da EJA.\n\n**REGRAS ABSOLUTAS:**\n1. **Escrita densa e expansiva:** Cada subseção deve produzir texto longo, acadêmico e aprofundado, de 5 a 8 parágrafos ricos. NUNCA resuma. EXPANDA e APROFUNDE cada conceito.\n2. **Voz:** Escreva na 3ª pessoa acadêmica (ex.: 'compreende-se', 'observa-se', 'evidencia-se'). Alterne com 1ª pessoa do plural reflexivo (ex.: 'compreendemos', 'destacamos').\n3. **Citações ABNT:** Toda citação direta deve usar aspas duplas e referência (Autor, Ano, p. XX). Toda citação indireta: (Autor, Ano).\n4. **Fidelidade Total:** Use APENAS os autores, citações e dados presentes no MATERIAL-FONTE. PROIBIDO inventar citações, páginas ou obras não fornecidas.\n5. **Articulação temática:** Cada subseção deve articular a teoria com a realidade da EJA e, quando pertinente, com o Pacto Nacional da EJA e o contexto do Cerrado.\n6. **Transição fluida:** Inicie cada subseção com um parágrafo de transição que conecta com o que veio antes. Finalize com uma síntese que aponta para a próxima seção.\n7. **Proibido:** Adicionar metodologia, resultados empíricos ou tópicos reservados ao Cap. 2, 3, 4 ou 5.",
+  "secoes": [
+    {
+      "id": "cap1_abertura",
+      "numero": 1,
+      "titulo": "Capítulo 1 — Abertura e Contextualização do PNE",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Redija a ABERTURA do Capítulo 1 intitulado 'Reflexões sobre educação, currículo e práticas curriculares dos professores da Educação de Jovens e Adultos'. Utilize o seguinte parágrafo inicial obrigatório, expandindo-o com profundidade acadêmica: comece pela Constituição Federal de 1988 (Art. 205) como ponto de partida do direito à educação. Em seguida, discuta os avanços e retrocessos dos princípios constitucionais na prática, destacando os de mais difícil efetivação como a qualidade e a aprendizagem ao longo da vida. Conclua esta parte apresentando o PNE 2026-2036 (Lei 15.388/2026) como instrumento central, descrevendo seu processo de construção democrática via CONAE e FNE. Escreva de 4 a 5 parágrafos acadêmicos densos.",
+          "required_keys": ["legislacao", "contexto_global"]
+        },
+        {
+          "comando": "Continuando o texto anterior de forma absolutamente fluida, apresente e discuta o Quadro com os 19 Objetivos do PNE 2026-2036. Não reproduza a tabela diretamente — DESCREVA e ANALISE academicamente cada grupo temático de objetivos (educação infantil, ensino fundamental/médio, diversidade, EJA, gestão democrática), problematizando sua relevância política e histórica. Argumente por que o pesquisador prioriza os Objetivos 8 (educação ambiental), 11 (EJA) e 19 (qualidade e equidade) para fins desta tese. Escreva de 4 a 5 parágrafos densos.",
+          "required_keys": ["legislacao", "contexto_global"]
+        }
+      ]
+    },
+    {
+      "id": "cap1_educacao_direito",
+      "numero": 2,
+      "titulo": "1.1 Educação: Direito, Cidadania e Emancipação dos Sujeitos",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie a subseção '1.1 Educação: Direito, Cidadania e Emancipação dos Sujeitos' com uma frase de transição clara. Desenvolva de 4 a 5 parágrafos aprofundando o conceito de direito à educação como construção histórica e social. Utilize centralmente: Cury (2002) sobre o direito à educação como fruto de lutas democráticas e sua dimensão de autoconstrução do sujeito. Dialogue com Gatti (2011) sobre qualidade social da educação. Articule com a concepção de cidadania de Benevides (1998). Conclua articulando esses direitos com a realidade dos sujeitos da EJA.",
+          "required_keys": ["referencial_teorico", "legislacao"]
+        },
+        {
+          "comando": "Continuando de forma fluida, desenvolva de 4 a 5 parágrafos sobre educação como emancipação e projeto de transformação social. Utilize: Adorno (1995) sobre a educação como desbarbarização e crítica à 'well adjusted people'; Lombardi (2011) sobre emancipação e consciência; Freire (2022) — a Pedagogia do Oprimido — sobre o papel do oprimido como sujeito da própria libertação e a crítica à educação bancária (inclua as citações literais presentes no material-fonte). Relacione com a situação histórica dos estudantes da EJA como sujeitos historicamente oprimidos.",
+          "required_keys": ["referencial_teorico"]
+        },
+        {
+          "comando": "Continuando de forma fluida, desenvolva de 4 a 5 parágrafos aprofundando o papel do professor e da escola na perspectiva emancipatória. Utilize centralmente: Giroux (1997) sobre professores como intelectuais transformadores e a crítica à proletarização do trabalho docente (inclua citações literais do material-fonte); Gramsci (1982) sobre a escola criadora e o papel dos intelectuais; Gadotti (1998) sobre pluralidade de projetos pedagógicos e educação para a cidadania; Fazenda (2005) sobre o professor pesquisador interdisciplinar. Articule com os desafios estruturais da EJA.",
+          "required_keys": ["referencial_teorico"]
+        },
+        {
+          "comando": "Finalize a subseção 1.1 com 3 a 4 parágrafos articulando as perspectivas de McLaren (2001) sobre pedagogia crítica e revolucionária, Mészáros (2005) sobre a necessidade de romper com a lógica do capital na educação, e Krenak (2020) sobre a cosmovisão da Terra viva como crítica à formação de técnicos para a exploração da natureza. Conecte essas perspectivas com a urgência de uma educação ambiental crítica na EJA e faça a transição para a próxima subseção sobre currículo.",
+          "required_keys": ["referencial_teorico", "contexto_global"]
+        }
+      ]
+    },
+    {
+      "id": "cap1_curriculo",
+      "numero": 3,
+      "titulo": "1.2 Currículo: Contradições, Disputas e Possibilidades para uma Sociedade Democrática e Humanizada",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie a subseção '1.2 Currículo: Contradições, Disputas e Possibilidades para uma Sociedade Democrática e Humanizada'. Desenvolva 4 a 5 parágrafos aprofundando o conceito de currículo a partir de Sacristán (2000 e 1995) — sua dimensão complexa, contraditória, reguladora e política. Use as citações literais presentes no material-fonte. Dialogue com Vasconcelos (1999) sobre currículo como conjunto de experiências de aprendizagem intencional. Problematize a tensão entre o currículo como lista de conteúdos e o currículo como experiência total do aluno, incluindo o currículo oculto.",
+          "required_keys": ["referencial_teorico", "praticas_curriculares"]
+        },
+        {
+          "comando": "Continuando fluentemente, desenvolva 4 a 5 parágrafos sobre o currículo integrado e a crítica ao currículo monocultural. Utilize centralmente: Santomé (1998) — defesa do currículo integrado como superação das disciplinas isoladas, a denúncia da influência empresarial nos sistemas educacionais e a advertência contra mudanças apenas na aparência; Gadotti (1998) sobre currículo multicultural e sua eficácia com as camadas populares. Relacione diretamente com a realidade dos estudantes da EJA e suas culturas invisibilizadas.",
+          "required_keys": ["referencial_teorico", "praticas_curriculares"]
+        },
+        {
+          "comando": "Continuando fluentemente, desenvolva 4 a 5 parágrafos sobre o currículo como instrumento político e de reprodução ou resistência. Utilize: Veiga (2002) sobre o currículo como construção social do conhecimento, sua não-neutralidade e sua relação com a ideologia dominante; Apple (1989) sobre o currículo oculto e os espaços de resistência no cotidiano escolar (inclua citações literais). Problematize como o currículo prescrito impõe parâmetros articulados às avaliações externas, citando Sampaio e Marin (2004) sobre a precarização do trabalho escolar expressa nas práticas curriculares.",
+          "required_keys": ["referencial_teorico", "praticas_curriculares"]
+        },
+        {
+          "comando": "Finalize a subseção 1.2 com 3 a 4 parágrafos aprofundando as perspectivas de Arroyo (2013) sobre a indiferença dos currículos com os sujeitos e o desaparecimento das vozes dos educandos; Marx (2023) como fundamento da crítica à divisão de classes reproduzida pelo currículo; e a justiça curricular proposta por Ponce, Costa e Araújo (2023) — os 3Rs da Justiça Social de Fraser e os 3Cs da Justiça Curricular — como horizonte normativo e metodológico para análise de currículos contra-hegemônicos. Faça a transição para a subseção sobre práticas docentes.",
+          "required_keys": ["referencial_teorico", "praticas_curriculares"]
+        }
+      ]
+    },
+    {
+      "id": "cap1_praticas_docentes",
+      "numero": 4,
+      "titulo": "1.3 Práticas Docentes e o Currículo Vivido: Professores e Alunos como Sujeitos do Currículo",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie a subseção '1.3 Práticas Docentes e o Currículo Vivido: Professores e Alunos como Sujeitos do Currículo'. Desenvolva 4 a 5 parágrafos aprofundando a distinção entre currículo prescrito e currículo real (vivido). Utilize: Sampaio e Marin (2004) sobre a precarização do trabalho escolar e a investigação do currículo real (inclua citações literais); Cruz (2007) sobre a prática docente como saber-fazer complexo e repleto de nuances, irredutível à técnica e às prescrições externas; a distinção entre prática pedagógica como práxis e como mero agir mecânico segundo Franco (2016).",
+          "required_keys": ["praticas_curriculares", "referencial_teorico"]
+        },
+        {
+          "comando": "Continuando fluentemente, desenvolva 4 a 5 parágrafos sobre o professor como intelectual e sujeito central do currículo. Utilize: Giroux (1997) sobre a escola como local não-neutro e o professor como sujeito político; Feldmann (2008) sobre paradigmas de formação que desencadeiem reflexividade crítica; Tardif e Lessard (2011) sobre o trabalho docente e as expectativas crescentes da sociedade; Adorno (1995) sobre a hostilidade das administrações escolares ao espírito criativo dos professores. Relacione com os desafios específicos dos professores da EJA.",
+          "required_keys": ["praticas_curriculares", "referencial_teorico"]
+        },
+        {
+          "comando": "Continuando fluentemente, desenvolva 4 a 5 parágrafos aprofundando a reorientação curricular participativa e a justiça curricular na EJA. Utilize: Saul (2014) sobre reorientar o currículo coletivamente como recriação da escola como espaço sociocultural comunitário e a inversão do vetor 'de cima para baixo'; Moreira (1988) sobre investigação da prática curricular com seus sujeitos; Veiga (1991 e 2002) sobre a importância de operacionalizar princípios na dinâmica interna da escola; Sacristán (2000) sobre o alerta de denunciar e ao mesmo tempo propor e justificar as escolhas curriculares.",
+          "required_keys": ["praticas_curriculares", "referencial_teorico"]
+        },
+        {
+          "comando": "Finalize o Capítulo 1 com uma síntese conclusiva de 4 a 5 parágrafos articulando os três eixos trabalhados: (1) educação como direito e emancipação, (2) currículo como disputa política e possibilidade de resistência, e (3) práticas docentes como práxis transformadora. Evidencie como esses três eixos convergem para a necessidade de um currículo crítico na EJA que dialogue com os saberes populares, as realidades territoriais e a perspectiva da justiça socioambiental. Anuncie de forma acadêmica e fluida que o Capítulo 2 aprofundará a dimensão ambiental e climática no currículo da EJA.",
+          "required_keys": ["praticas_curriculares", "referencial_teorico", "contexto_global"]
+        }
+      ]
+    }
+  ],
+  "exportacao": {
+    "formatos_suportados": ["docx", "pdf", "txt"],
+    "formato_padrao": "docx"
+  }
+}

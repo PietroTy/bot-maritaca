@@ -107,7 +107,8 @@ def categorize_knowledge_base(texto_fatos: str, api_key: str, status_callback: O
         "legislacao": "",
         "biografia_pesquisador": "",
         "referencial_teorico": "",
-        "metodologia_e_instrumentos": ""
+        "metodologia_e_instrumentos": "",
+        "praticas_curriculares": ""
     }
     
     if not api_key or not texto_fatos.strip():
@@ -122,11 +123,12 @@ def categorize_knowledge_base(texto_fatos: str, api_key: str, status_callback: O
             "Você é um Agente Classificador Estrutural de Dados de Pesquisa.\n"
             "Sua missão é ler o documento de pesquisa fornecido e categorizar seus parágrafos em um JSON ESTRITO.\n"
             "As chaves obrigatórias do JSON são:\n"
-            "1. \"contexto_global\"\n"
-            "2. \"legislacao\"\n"
-            "3. \"biografia_pesquisador\"\n"
-            "4. \"referencial_teorico\"\n"
-            "5. \"metodologia_e_instrumentos\"\n\n"
+            "1. \"contexto_global\" — Contexto histórico, social e ambiental geral\n"
+            "2. \"legislacao\" — Leis, políticas públicas, planos e marcos normativos\n"
+            "3. \"biografia_pesquisador\" — Trajetória pessoal e profissional do autor\n"
+            "4. \"referencial_teorico\" — Conceitos e teorias de autores acadêmicos (Freire, Sacristán, Giroux, etc.)\n"
+            "5. \"metodologia_e_instrumentos\" — Métodos de pesquisa, técnicas e instrumentos\n"
+            "6. \"praticas_curriculares\" — Práticas docentes, currículo vivido, currículo prescrito, prática pedagógica, justiça curricular\n\n"
             "Valores: Cada chave deve conter uma ARRAY de strings. Insira os parágrafos relevantes EXATAMENTE como estão na fonte (transcrição literal).\n"
             "Se o documento não contiver informações para alguma categoria, deixe a array vazia [].\n"
             "Responda APENAS com o JSON, sem nenhum outro tipo de texto.\n\n"
