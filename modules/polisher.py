@@ -126,7 +126,48 @@ def polish(
         clean_text = re.sub(r'\[\s*(ALERTA|Ref).*?\]', '', clean_text, flags=re.IGNORECASE|re.DOTALL)
         # Limpa Markdown headings brutas (#)
         clean_text = re.sub(r'#{1,6}\s+', '', clean_text)
+
+        # ── FILTRO 1: Assinatura do Sistema (Metadados Vazados) ──────────────
+        # Remove qualquer linha que contenha a assinatura do Escriba ou número de página gerado pelo sistema
+        # Ex: "Escriba v2.0- O lugar (e o não lugar)... Página 23"
+        clean_text = re.sub(
+            r'^.*Escriba\s+v\d+[\.,\-\s].*$',
+            '',
+            clean_text,
+            flags=re.IGNORECASE | re.MULTILINE
+        )
+        # Remove linhas que são apenas "Página N" ou "Page N" isoladas (rodapés)
+        clean_text = re.sub(
+            r'^\s*P[áa]gina\s+\d+\s*$',
+            '',
+            clean_text,
+            flags=re.IGNORECASE | re.MULTILINE
+        )
+
+        # ── FILTRO 2: Alucinação Normativa (Números de Leis Fabricados) ─────
+        # Detecta padrões "Lei NNNNN/AAAA" onde NNNNN tem 5+ dígitos (número alto = suspeito de invenção)
+        # Números de lei reais historicamente raramente ultrapassam 5 dígitos na legislação federal brasileira
+        # anterior a 2020. Leis com 5 dígitos a partir de 14.000+ são suspeitas se não constam na fonte.
+        def _substituir_lei_suspeita(match):
+            lei_completa = match.group(0)
+            numero_lei = match.group(1)
+            ano_lei = match.group(2)
+            # Leis acima de 14500 com anos >= 2024 são altamente prováveis de alucinación
+            if int(numero_lei) >= 14500 and int(ano_lei) >= 2024:
+                return f"[LEI {numero_lei}/{ano_lei} — VERIFICAR FONTE]"
+            return lei_completa
+
+        clean_text = re.sub(
+            r'Lei\s+n[\.\u00ba]?\s*(\d{5,})[\/\-](\d{4})',
+            _substituir_lei_suspeita,
+            clean_text,
+            flags=re.IGNORECASE
+        )
+
+        # Normaliza linhas em branco múltiplas geradas pelos filtros
+        clean_text = re.sub(r'\n{3,}', '\n\n', clean_text)
         clean_text = clean_text.strip()
+
 
         resultados.append(PolishResult(
             secao_id=secao.secao_id,
