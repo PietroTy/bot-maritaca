@@ -156,11 +156,30 @@ def generate(
                 "Lembre-se: Use APENAS o material-fonte isolado acima. Ignore metodologias se elas não estiverem listadas."
             )
 
+            # Cláusula Anti-Transição Robótica: proíbe o modelo de usar fórmulas
+            # mecânicas de abertura ("Prosseguindo...", "Dando continuidade...", etc.)
+            # que denunciam que o texto foi gerado em pedaços via API.
+            regra_transicao = (
+                "REGRA DE COSTURA INVISÍVEL (OBRIGATÓRIA): "
+                "Este bloco é a continuação direta do texto anterior. "
+                "É TERMINANTEMENTE PROIBIDO iniciar com fórmulas mecânicas de transição, "
+                "tais como: 'Prosseguindo na análise', 'Dando continuidade', 'Aprofundando a discussão', "
+                "'Continuando a análise', 'Em continuidade', 'Retomando', 'Como vimos' ou similares. "
+                "O primeiro parágrafo DEVE começar diretamente com a argumentação teórica, "
+                "como se o texto fosse um único fluxo contínuo de escrita. "
+                "A costura entre os blocos deve ser COMPLETAMENTE INVISÍVEL ao leitor.\n\n"
+            )
+
             if contexto_interno:
                 user_prompt = (
-                    "CONTEXTO DE CONTINUIDADE (O que você já escreveu e deve prosseguir):\n"
-                    f"{contexto_interno}\n--- FIM DO CONTEXTO ---\n\n" + user_prompt
+                    "TEXTO JÁ REDIGIDO (referência de continuidade — não repita, apenas prossiga o raciocínio):\n"
+                    f"{contexto_interno}\n--- FIM DA REFERÊNCIA ---\n\n"
+                    + regra_transicao
+                    + user_prompt
                 )
+            else:
+                # Mesmo no primeiro chunk, aplica a regra para blocos únicos
+                user_prompt = regra_transicao + user_prompt
 
             # Extração de Chaves Anti-Omissão deste bloco
             ent_prompt = extract_required_entities_from_prompt(comando_atual, api_key)

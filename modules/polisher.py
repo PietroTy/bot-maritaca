@@ -128,10 +128,11 @@ def polish(
         clean_text = re.sub(r'#{1,6}\s+', '', clean_text)
 
         # ── FILTRO 1: Assinatura do Sistema (Metadados Vazados) ──────────────
-        # Remove qualquer linha que contenha a assinatura do Escriba ou número de página gerado pelo sistema
-        # Ex: "Escriba v2.0- O lugar (e o não lugar)... Página 23"
+        # Remove qualquer linha que contenha a assinatura do Escriba ou número de página gerado pelo sistema.
+        # CORREÇÃO: v\d+ não capturava 'v2.0' pois o ponto interrompe \d+.
+        # O padrão correto captura versões com decimais: v2.0, v2.1, v10.3, etc.
         clean_text = re.sub(
-            r'^.*Escriba\s+v\d+[\.,\-\s].*$',
+            r'^.*Escriba\s+v\d+(?:[\.,]\d+)*[^\n]*$',
             '',
             clean_text,
             flags=re.IGNORECASE | re.MULTILINE
@@ -145,20 +146,22 @@ def polish(
         )
 
         # ── FILTRO 2: Alucinação Normativa (Números de Leis Fabricados) ─────
-        # Detecta padrões "Lei NNNNN/AAAA" onde NNNNN tem 5+ dígitos (número alto = suspeito de invenção)
-        # Números de lei reais historicamente raramente ultrapassam 5 dígitos na legislação federal brasileira
-        # anterior a 2020. Leis com 5 dígitos a partir de 14.000+ são suspeitas se não constam na fonte.
+        # CORREÇÃO: "15.388/2026" usa ponto como separador de milhar (formato BR).
+        # O padrão anterior só capturava \d{5,}, que não faz match de "15.388".
+        # A nova regex captura tanto "15388" quanto "15.388" e normaliza para comparar o valor.
         def _substituir_lei_suspeita(match):
-            lei_completa = match.group(0)
-            numero_lei = match.group(1)
-            ano_lei = match.group(2)
-            # Leis acima de 14500 com anos >= 2024 são altamente prováveis de alucinación
-            if int(numero_lei) >= 14500 and int(ano_lei) >= 2024:
-                return f"[LEI {numero_lei}/{ano_lei} — VERIFICAR FONTE]"
-            return lei_completa
+            numero_raw = match.group(1)          # ex: "15.388" ou "15388"
+            ano_raw    = match.group(2)          # ex: "2026"
+            numero_int = int(numero_raw.replace('.', '').replace(',', ''))
+            ano_int    = int(ano_raw)
+            # Leis acima de 14500 com anos >= 2024 são altamente prováveis de alucinação
+            if numero_int >= 14500 and ano_int >= 2024:
+                return f"[LEI {numero_raw}/{ano_raw} — VERIFICAR FONTE]"
+            return match.group(0)
 
+        # Captura: "Lei n. 15.388/2026", "Lei nº 15388/2026", "Lei 15.388/2026", etc.
         clean_text = re.sub(
-            r'Lei\s+n[\.\u00ba]?\s*(\d{5,})[\/\-](\d{4})',
+            r'Lei\s+(?:n[\.\u00ba°]?\s*)?([\d][\d\.]{3,}[\.\d]*)[\/\-](\d{4})',
             _substituir_lei_suspeita,
             clean_text,
             flags=re.IGNORECASE
