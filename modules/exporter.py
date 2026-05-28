@@ -15,8 +15,37 @@ Responsabilidades:
 """
 
 import io
+import re
 from datetime import datetime
 from typing import Optional
+
+
+# ─────────────────────────────────────────────────────────────
+# Filtro de Sanitização Pós-Geração
+# Remove artefatos do sistema que o LLM possa ter inserido
+# apesar das regras do system prompt.
+# ─────────────────────────────────────────────────────────────
+_PADROES_LIXO = [
+    # Assinatura do sistema no corpo do texto
+    r"Escriba\s+v\d+\.\d+[^\n]*",
+    # Tags de verificação residuais: [LEI 15.388/2026 VERIFICAR FONTE], [VERIFICAR], etc.
+    r"\[\s*[^\]]*?VERIFICAR[^\]]*?\]",
+    # Tags genéricas de marcação interna: [NOTA], [REVISAR], [CHECAR FONTE]
+    r"\[\s*(?:NOTA|REVISAR|CHECAR FONTE|FONTE VERIFICAR|CONFIRMAR)[^\]]*?\]",
+    # Marcadores de página soltos: "Página 11", "Pág. 11"
+    r"(?:P[áa]gina|P[áa]g\.?)\s+\d+",
+]
+_RE_SANITIZAR = re.compile("|".join(_PADROES_LIXO), re.IGNORECASE)
+
+
+def _sanitizar_texto(texto: str) -> str:
+    """Remove metadados, tags de sistema e assinaturas do texto gerado pela IA."""
+    # Remove os padrões conhecidos
+    texto = _RE_SANITIZAR.sub("", texto)
+    # Normaliza espaços excessivos deixados pelas remoções
+    texto = re.sub(r" {2,}", " ", texto)
+    texto = re.sub(r"\n{3,}", "\n\n", texto)
+    return texto.strip()
 
 
 # --- PDF via ReportLab ---
@@ -71,6 +100,7 @@ def _gerar_pdf(secoes: list, tema: str, idioma: str) -> bytes:
         if titulo:
             story.append(Paragraph(titulo, styles["HeadingSection"]))
 
+        texto = _sanitizar_texto(texto)
         for paragrafo in [p.strip() for p in texto.split("\n\n") if p.strip()]:
             # Convert Markdown headers
             header_match = re.match(r'^(#{1,6})\s+(.*)', paragrafo)
@@ -104,7 +134,7 @@ def _gerar_txt(secoes: list, tema: str, idioma: str) -> bytes:
             linhas.append(f"\n{'=' * 40}")
             linhas.append(secao.get("titulo", ""))
             linhas.append("=" * 40)
-        linhas.append(secao.get("texto", ""))
+        linhas.append(_sanitizar_texto(secao.get("texto", "")))
     return "\n".join(linhas).encode("utf-8")
 
 
@@ -126,8 +156,8 @@ def _gerar_docx(secoes: list, tema: str, idioma: str) -> bytes:
     for secao in secoes:
         if secao.get("titulo", ""):
             doc.add_heading(secao.get("titulo", ""), level=2)
-        texto = secao.get("texto", "")
-        
+        texto = _sanitizar_texto(secao.get("texto", ""))
+
         for paragrafo in [p.strip() for p in texto.split("\n\n") if p.strip()]:
             # Suporte para Cabeçalhos Markdown
             header_match = re.match(r'^(#{1,6})\s+(.*)', paragrafo)
