@@ -14,15 +14,31 @@ import sys
 import config
 import hashlib
 
+import importlib
 import modules.persistence as persistence
+importlib.reload(persistence)
 
 # Inicializa diretórios
 persistence.ensure_dir()
 
+import modules.ingestor as ingestor_mod
+importlib.reload(ingestor_mod)
 from modules.ingestor import ingest_document, IngestorResult
+
+import modules.comprehension as comprehension_mod
+importlib.reload(comprehension_mod)
 from modules.comprehension import comprehend
+
+import modules.generator as generator_mod
+importlib.reload(generator_mod)
 from modules.generator import generate
+
+import modules.polisher as polisher_mod
+importlib.reload(polisher_mod)
 from modules.polisher import polish
+
+import modules.exporter as exporter_mod
+importlib.reload(exporter_mod)
 from modules.exporter import export
 
 # ──────────────────────────────────────────────────────────────────
