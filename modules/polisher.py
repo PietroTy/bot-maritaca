@@ -137,6 +137,15 @@ def polish(
             clean_text,
             flags=re.IGNORECASE | re.MULTILINE
         )
+        
+        # Apaga qualquer linha que comece com "v2.0-" (ou assinaturas de versão similares) até a próxima quebra de linha
+        clean_text = re.sub(
+            r'^\s*v\d+(?:[\.,]\d+)*\-.*$',
+            '',
+            clean_text,
+            flags=re.IGNORECASE | re.MULTILINE
+        )
+
         # Remove linhas que são apenas "Página N" ou "Page N" isoladas (rodapés)
         clean_text = re.sub(
             r'^\s*P[áa]gina\s+\d+\s*$',
