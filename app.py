@@ -580,7 +580,57 @@ if gerar_btn:
 # ──────────────────────────────────────────────────────────────────
 if st.session_state.get("export_bytes") and st.session_state.get("pipeline_rodou"):
     st.markdown("---")
-    st.markdown("### Resultado Gerado")
+    
+    # ─── MAPA SEMÂNTICO (ANÁLISE QUALITATIVA DE BARDIN) ──────────────────
+    if st.session_state.get("comprehension_result"):
+        comp_res = st.session_state["comprehension_result"]
+        with st.expander("🧠 Análise de Conteúdo & Mapa Semântico (Bardin)", expanded=True):
+            st.markdown("#### 📋 Caracterização e Síntese")
+            c1, c2 = st.columns([1, 2])
+            with c1:
+                st.markdown(f"""
+                <div style="background: rgba(255,255,255,0.04); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); height: 100%;">
+                    <small style="color: #a78bfa; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Classificação Metodológica</small>
+                    <p style="font-size: 1.1rem; margin-top: 0.5rem; font-weight: 500; color: #f8fafc;">{comp_res.classificacao}</p>
+                </div>
+                """, unsafe_allow_html=True)
+            with c2:
+                st.markdown(f"""
+                <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); height: 100%;">
+                    <small style="color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Resumo Acadêmico da Fonte</small>
+                    <p style="font-size: 0.95rem; margin-top: 0.5rem; line-height: 1.6; color: #cbd5e1;">{comp_res.resumo_academico}</p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            st.markdown("#### 📂 Categorias Temáticas Extraídas")
+            if comp_res.temas:
+                for idx, tema in enumerate(comp_res.temas):
+                    st.markdown(f"""
+                    <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(255,255,255,0.05);">
+                        <strong style="color: #38bdf8; font-size: 1.1rem;">Categoria {idx+1}: {tema.get('titulo', 'Sem Título')}</strong><br>
+                        <p style="font-style: italic; font-size: 0.95rem; color: #94a3b8; margin: 0.4rem 0 0.8rem 0;">{tema.get('resumo_tema', '')}</p>
+                        <div style="padding-left: 1rem; border-left: 2px solid #38bdf8;">
+                            {"".join([f"<div style='margin-bottom: 0.4rem; color: #e2e8f0; font-size: 0.95rem;'>• {pt}</div>" for pt in tema.get("pontos_chave", [])])}
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            else:
+                st.info("Nenhuma categoria temática detectada automaticamente.")
+
+            if comp_res.citacoes_chave:
+                st.markdown("---")
+                st.markdown("#### 💬 Banco de Evidências (Citações Verbatim para a Tese)")
+                for cit in comp_res.citacoes_chave:
+                    st.markdown(f"""
+                    <div style="background: rgba(167,139,250,0.04); border-left: 4px solid #a78bfa; padding: 0.8rem 1.2rem; border-radius: 0 8px 8px 0; margin-bottom: 0.8rem; border-top: 1px solid rgba(167,139,250,0.08); border-right: 1px solid rgba(167,139,250,0.08); border-bottom: 1px solid rgba(167,139,250,0.08);">
+                        <span style="font-style: italic; font-size: 1.05rem; color: #f1f5f9; line-height: 1.6;">“{cit.get('texto', '').replace('“', '').replace('”', '').strip()}”</span><br>
+                        <small style="color: #94a3b8; display: inline-block; margin-top: 0.4rem;">— <strong>{cit.get('contexto_autor', 'N/D')}</strong> | {cit.get('pagina_paragrafo', 'N/D')}</small>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+    st.markdown("---")
+    st.markdown("### Texto da Tese Gerado")
 
     polish_results = st.session_state.get("polish_results", [])
 

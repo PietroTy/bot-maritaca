@@ -34,24 +34,40 @@ class EvidenceChunk:
 
 
 class ComprehensionResult:
-    """Resultado padronizado da compreensão."""
-    def __init__(self, texto_completo: str, chunks: list[EvidenceChunk], resumo_semantico: str):
+    """Resultado padronizado da compreensão acadêmica e qualitativa."""
+    def __init__(
+        self,
+        texto_completo: str,
+        chunks: list[EvidenceChunk],
+        resumo_semantico: str,
+        resumo_academico: str,
+        classificacao: str,
+        temas: list[dict],
+        citacoes_chave: list[dict]
+    ):
         self.texto_completo = texto_completo
         self.chunks = chunks
         self.resumo_semantico = resumo_semantico
+        self.resumo_academico = resumo_academico
+        self.classificacao = classificacao
+        self.temas = temas
+        self.citacoes_chave = citacoes_chave
 
     def to_dict(self) -> dict:
         return {
             "total_chunks": len(self.chunks),
             "resumo_semantico_preview": self.resumo_semantico[:500],
-            "status": "placeholder — Self-RAG não implementado ainda",
+            "resumo_academico": self.resumo_academico,
+            "classificacao": self.classificacao,
+            "total_temas": len(self.temas),
+            "total_citacoes": len(self.citacoes_chave),
+            "status": "funcional — análise qualitativa ativa",
         }
 
 
-def _split_em_chunks(texto: str, tamanho: int = 1500) -> list[tuple[int, str]]:
+def _split_em_chunks(texto: str, tamanho: int = 1500) -> list[tuple[int, Optional[int], str]]:
     """
     Divide o texto em chunks respeitando quebras de parágrafo.
-    ROADMAP: Substituir por chunking semântico com embeddings.
     """
     paragrafos = [p.strip() for p in texto.split("\n\n") if p.strip()]
     chunks = []
@@ -81,25 +97,16 @@ def _split_em_chunks(texto: str, tamanho: int = 1500) -> list[tuple[int, str]]:
 
 def comprehend(texto: str, status_callback=None) -> ComprehensionResult:
     """
-    Ponto de entrada principal do Motor de Compreensão.
-
-    ROADMAP Self-RAG:
-    1. Dividir em chunks semânticos
-    2. Gerar embeddings com modelo de embedding local
-    3. Indexar no ChromaDB com metadados de página/parágrafo
-    4. Retornar ComprehensionResult com mapa de evidências
-
-    Args:
-        texto: Texto limpo do IngestorResult.
-        status_callback: Função opcional de progresso.
-
-    Returns:
-        ComprehensionResult com chunks indexados.
+    Ponto de entrada principal do Motor de Compreensão e Mapeamento Semântico.
+    Realiza análise qualitativa/temática do texto usando o Sabiázinho-4.
     """
+    import config
+    api_key = config.get_api_key()
+
     if status_callback:
         status_callback("🧠 Analisando estrutura do documento e mapeando evidências...")
 
-    # [PLACEHOLDER] Chunking simples por tamanho
+    # Chunking preliminar para indexação local
     chunks_raw = _split_em_chunks(texto)
     chunks = [
         EvidenceChunk(
@@ -111,18 +118,144 @@ def comprehend(texto: str, status_callback=None) -> ComprehensionResult:
         for i, (para_num, pagina, c_texto) in enumerate(chunks_raw)
     ]
 
-    # [PLACEHOLDER] Resumo semântico — futuramente via sabiazinho-3
-    total_palavras = len(texto.split())
-    resumo_semantico = (
-        f"Documento processado: {total_palavras} palavras divididas em {len(chunks)} chunks. "
-        f"[ROADMAP] Embeddings e índice vetorial serão gerados aqui via Self-RAG."
-    )
+    # Se não houver API key, executa análise heurística offline
+    if not api_key:
+        if status_callback:
+            status_callback("⚠️ Sem chave de API. Executando análise qualitativa simplificada (modo offline)...")
+        
+        # Heurística offline
+        resumo_academico = (
+            f"Análise offline concluída para o material fornecido. O texto possui {len(texto.split())} palavras "
+            f"distribuídas em {len(chunks)} blocos de evidência. "
+            f"Configure sua MARITACA_API_KEY para obter o mapeamento semântico completo via inteligência artificial."
+        )
+        classificacao = "Documento de Referência (Offline)"
+        temas = [
+            {
+                "titulo": "Estrutura Geral do Material",
+                "resumo_tema": "Visão estrutural dos tópicos abordados no texto base.",
+                "pontos_chave": ["Mapeamento de parágrafos realizado com sucesso.", "Rastreabilidade de origem ativa."]
+            }
+        ]
+        citacoes_chave = []
+        
+        # Tenta extrair algumas citações heurísticas entre aspas
+        aspas_matches = re.findall(r'“([^”]+)”|"[^"]+"', texto)
+        for match in aspas_matches[:5]:
+            if match and len(match.strip()) > 30:
+                citacoes_chave.append({
+                    "texto": match.strip(),
+                    "contexto_autor": "Autor citado na fonte",
+                    "pagina_paragrafo": "Localizado via busca léxica"
+                })
 
-    if status_callback:
-        status_callback(f"✅ Compreensão concluída: {len(chunks)} blocos de evidência mapeados.")
+        resumo_semantico = f"Modo offline ativo. {len(chunks)} chunks gerados."
+        
+        return ComprehensionResult(
+            texto_completo=texto,
+            chunks=chunks,
+            resumo_semantico=resumo_semantico,
+            resumo_academico=resumo_academico,
+            classificacao=classificacao,
+            temas=temas,
+            citacoes_chave=citacoes_chave
+        )
 
-    return ComprehensionResult(
-        texto_completo=texto,
-        chunks=chunks,
-        resumo_semantico=resumo_semantico,
-    )
+    # Modo Online: Análise Semântica Qualitativa via Maritaca Sabiázinho-4
+    try:
+        import openai
+        client = openai.OpenAI(api_key=api_key, base_url=config.MARITACA_BASE_URL)
+        
+        if status_callback:
+            status_callback("🧠 Enviando material para mapeamento semântico (sabiazinho-4)...")
+
+        # Limita o texto para não estourar contexto, caso seja gigantesco (poupando tokens e custos)
+        # Sabiázinho-4 aguenta 128k, mas fatiar em 100k caracteres (cerca de 20k tokens) é seguro e rápido.
+        texto_analise = texto[:120000]
+
+        system_prompt = (
+            "Você é o Analista Qualitativo e Especialista em Metodologia de Pesquisa do sistema Escriba.\n"
+            "Sua tarefa é analisar o material-fonte fornecido e gerar uma compreensão estruturada para auxiliar "
+            "na escrita de uma tese de doutorado. Toda a análise deve se basear estritamente no texto fornecido.\n\n"
+            "RETORNO OBRIGATÓRIO EM JSON (estrito, sem markdown ou blocos de código adicionais):\n"
+            "{\n"
+            "  \"resumo_academico\": \"Um parágrafo de síntese formal do foco, escopo e principais contribuições do material.\",\n"
+            "  \"classificacao\": \"Classificação metodológica do documento (ex: Teórico/Referencial, Empírico/Pesquisa de Campo, Normativo/Legal, Metodológico, ou Misto) seguida de justificativa curta.\",\n"
+            "  \"temas\": [\n"
+            "    {\n"
+            "      \"titulo\": \"Título do Tema/Categoria (curto e acadêmico)\",\n"
+            "      \"resumo_tema\": \"Explicação resumida de como esta categoria se expressa no texto.\",\n"
+            "      \"pontos_chave\": [\n"
+            "        \"Argumento ou dado principal 1\",\n"
+            "        \"Argumento ou dado principal 2\"\n"
+            "      ]\n"
+            "    }\n"
+            "  ],\n"
+            "  \"citacoes_chave\": [\n"
+            "    {\n"
+            "      \"texto\": \"A frase exata contida no texto (verbatim) entre aspas, ideal para ser citada.\",\n"
+            "      \"contexto_autor\": \"Quem disse a frase (ex: Paulo Freire, Professor Ipê, a PNEA, etc.) e o contexto.\",\n"
+            "      \"pagina_paragrafo\": \"Localização aproximada no texto se houver menção a páginas (ex: pág 53) ou parágrafos.\"\n"
+            "    }\n"
+            "  ]\n"
+            "}"
+        )
+
+        user_prompt = (
+            "Analise o seguinte material de referência para a tese e construa o mapa semântico qualitativo.\n\n"
+            f"[MATERIAL DE REFERÊNCIA]:\n\"\"\"\n{texto_analise}\n\"\"\"\n\n"
+            "Gere o JSON estruturado agora."
+        )
+
+        response = client.chat.completions.create(
+            model="sabiazinho-4",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0.3,
+            response_format={"type": "json_object"}
+        )
+
+        dados = json.loads(response.choices[0].message.content)
+        
+        resumo_academico = dados.get("resumo_academico", "Não foi possível gerar o resumo.")
+        classificacao = dados.get("classificacao", "Misto / Referência")
+        temas = dados.get("temas", [])
+        citacoes_chave = dados.get("citacoes_chave", [])
+        
+        resumo_semantico = (
+            f"Análise inteligente concluída. Foram extraídos {len(temas)} temas principais "
+            f"e {len(citacoes_chave)} citações de alta relevância acadêmica."
+        )
+
+        if status_callback:
+            status_callback(f"✅ Compreensão concluída: {len(temas)} temas e {len(citacoes_chave)} citações catalogadas!")
+
+        return ComprehensionResult(
+            texto_completo=texto,
+            chunks=chunks,
+            resumo_semantico=resumo_semantico,
+            resumo_academico=resumo_academico,
+            classificacao=classificacao,
+            temas=temas,
+            citacoes_chave=citacoes_chave
+        )
+
+    except Exception as e:
+        if status_callback:
+            status_callback(f"❌ Erro na análise com IA: {e}. Rebatendo para modo offline...")
+        
+        # Fallback se a API falhar
+        resumo_academico = f"Erro na análise de IA: {e}. Processamento de contingência concluído."
+        classificacao = "Misto (Fallback)"
+        temas = [{"titulo": "Erro de Processamento", "resumo_tema": "Ocorreu um erro ao comunicar com a IA da Maritaca.", "pontos_chave": [str(e)]}]
+        return ComprehensionResult(
+            texto_completo=texto,
+            chunks=chunks,
+            resumo_semantico="Erro no processamento online.",
+            resumo_academico=resumo_academico,
+            classificacao=classificacao,
+            temas=temas,
+            citacoes_chave=[]
+        )
