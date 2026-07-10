@@ -4,11 +4,29 @@
   "descricao": "Geração de resumos e fichamentos conforme ABNT NBR 6028.",
   "requisitos": "Escriba precisa de: Texto íntegro da obra. Para a seção de referência, os dados da obra (autor, editora, ano) precisam estar no texto.",
   "norma": "ABNT NBR 6028",
-  "prioridade": 5,
+  "prioridade": 6,
   "status": "placeholder",
   "secoes": [
-    { "id": "referencia", "numero": 0, "titulo": "Referência da Obra", "obrigatorio": true, "prompt": "[PLACEHOLDER]" },
-    { "id": "resumo", "numero": 1, "titulo": "Resumo", "obrigatorio": true, "prompt": "[PLACEHOLDER]" }
+    {
+      "id": "referencia",
+      "numero": 0,
+      "titulo": "Referência da Obra",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER]"
+    },
+    {
+      "id": "resumo",
+      "numero": 1,
+      "titulo": "Resumo",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER]"
+    }
   ],
-  "exportacao": { "formatos_suportados": ["txt", "docx"], "formato_padrao": "txt" }
+  "exportacao": {
+    "formatos_suportados": [
+      "txt",
+      "docx"
+    ],
+    "formato_padrao": "txt"
+  }
 }

@@ -4,16 +4,65 @@
   "descricao": "Geração de artigos científicos conforme ABNT NBR 6022.",
   "requisitos": "Escriba precisa de: Dados experimentais, metodologia e conclusões. Para as 'Referências', as obras e links devem estar citados formalmente no original.",
   "norma": "ABNT NBR 6022",
-  "prioridade": 2,
+  "prioridade": 3,
   "status": "placeholder",
   "secoes": [
-    { "id": "titulo", "numero": 0, "titulo": "Título e Autoria", "obrigatorio": true, "prompt": "[PLACEHOLDER] Gerar título e autoria baseado no material." },
-    { "id": "resumo", "numero": 1, "titulo": "Resumo e Palavras-chave", "obrigatorio": true, "prompt": "[PLACEHOLDER] Gerar resumo conforme ABNT NBR 6028." },
-    { "id": "abstract", "numero": 2, "titulo": "Abstract", "obrigatorio": true, "prompt": "[PLACEHOLDER] Gerar abstract em inglês." },
-    { "id": "introducao", "numero": 3, "titulo": "Introdução", "obrigatorio": true, "prompt": "[PLACEHOLDER] Gerar introdução." },
-    { "id": "desenvolvimento", "numero": 4, "titulo": "Desenvolvimento", "obrigatorio": true, "prompt": "[PLACEHOLDER] Gerar desenvolvimento/referencial teórico." },
-    { "id": "conclusao", "numero": 5, "titulo": "Considerações Finais", "obrigatorio": true, "prompt": "[PLACEHOLDER] Gerar considerações finais." },
-    { "id": "referencias", "numero": 6, "titulo": "Referências", "obrigatorio": true, "prompt": "[PLACEHOLDER] Extrair referências no formato ABNT." }
+    {
+      "id": "titulo",
+      "numero": 0,
+      "titulo": "Título e Autoria",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER] Gerar título e autoria baseado no material."
+    },
+    {
+      "id": "resumo",
+      "numero": 1,
+      "titulo": "Resumo e Palavras-chave",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER] Gerar resumo conforme ABNT NBR 6028."
+    },
+    {
+      "id": "abstract",
+      "numero": 2,
+      "titulo": "Abstract",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER] Gerar abstract em inglês."
+    },
+    {
+      "id": "introducao",
+      "numero": 3,
+      "titulo": "Introdução",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER] Gerar introdução."
+    },
+    {
+      "id": "desenvolvimento",
+      "numero": 4,
+      "titulo": "Desenvolvimento",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER] Gerar desenvolvimento/referencial teórico."
+    },
+    {
+      "id": "conclusao",
+      "numero": 5,
+      "titulo": "Considerações Finais",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER] Gerar considerações finais."
+    },
+    {
+      "id": "referencias",
+      "numero": 6,
+      "titulo": "Referências",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER] Extrair referências no formato ABNT."
+    }
   ],
-  "exportacao": { "formatos_suportados": ["pdf", "tex", "docx"], "formato_padrao": "pdf" }
+  "exportacao": {
+    "formatos_suportados": [
+      "pdf",
+      "tex",
+      "docx"
+    ],
+    "formato_padrao": "pdf"
+  }
 }

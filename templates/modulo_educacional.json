@@ -4,7 +4,7 @@
   "descricao": "Geração professional (Enap-Style) com Identificação, Objetivos e suporte a Marcadores de Mídia.",
   "requisitos": "Escriba precisa de: Apostilas, slides ou notas de aula densas. Para seções de 'Links' e 'Referências', os endereços e obras devem estar citados no material fornecido.",
   "norma": "Diretrizes Pedagógicas / Enap-IFSP",
-  "prioridade": 1,
+  "prioridade": 2,
   "secoes": [
     {
       "id": "identificacao",
@@ -78,7 +78,12 @@
     }
   ],
   "exportacao": {
-    "formatos_suportados": ["pdf", "docx", "txt", "tex"],
+    "formatos_suportados": [
+      "pdf",
+      "docx",
+      "txt",
+      "tex"
+    ],
     "formato_padrao": "pdf"
   }
 }

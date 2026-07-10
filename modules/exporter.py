@@ -237,7 +237,7 @@ def export(
         Tupla (bytes_do_arquivo, nome_arquivo, mime_type).
     """
     if status_callback:
-        status_callback(f"📤 Compilando documento final em formato {formato.upper()}...")
+        status_callback(f"Compilando documento final em formato {formato.upper()}...")
 
     secoes = [
         {"titulo": r.secao_id.replace("_", " ").title(), "texto": r.texto_polido}

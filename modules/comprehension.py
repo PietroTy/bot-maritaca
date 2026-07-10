@@ -104,7 +104,7 @@ def comprehend(texto: str, status_callback=None) -> ComprehensionResult:
     api_key = config.get_api_key()
 
     if status_callback:
-        status_callback("🧠 Analisando estrutura do documento e mapeando evidências...")
+        status_callback("Analisando estrutura do documento e mapeando evidências...")
 
     # Chunking preliminar para indexação local
     chunks_raw = _split_em_chunks(texto)
@@ -167,7 +167,7 @@ def comprehend(texto: str, status_callback=None) -> ComprehensionResult:
         client = openai.OpenAI(api_key=api_key, base_url=config.MARITACA_BASE_URL)
         
         if status_callback:
-            status_callback("🧠 Enviando material para mapeamento semântico (sabiazinho-4)...")
+            status_callback("Enviando material para mapeamento semântico (sabiazinho-4)...")
 
         # Limita o texto para não estourar contexto, caso seja gigantesco (poupando tokens e custos)
         # Sabiázinho-4 aguenta 128k, mas fatiar em 100k caracteres (cerca de 20k tokens) é seguro e rápido.

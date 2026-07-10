@@ -88,7 +88,7 @@ def ingest_document(file_bytes: bytes, nome_arquivo: str, status_callback=None) 
         IngestorResult com texto, hash, metadados e formato detectado.
     """
     if status_callback:
-        status_callback("📄 Detectando formato e extraindo texto...")
+        status_callback("Detectando formato e extraindo texto...")
 
     extensao = nome_arquivo.rsplit(".", 1)[-1].lower()
 

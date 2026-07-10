@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escriba — Redação Acadêmica por IA</title>
+    <meta name="description" content="Central de redação acadêmica para teses de doutorado e artigos científicos com auditoria de fidelidade por IA.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="logo-symbol">E</div>
+                <div>
+                    <h1>Escriba</h1>
+                    <p class="subtitle">Redação acadêmica com micro-chunking iterativo e auditoria de fidelidade</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="api-status" id="apiKeyStatus">
+                    <span class="status-indicator"></span>
+                    <span class="status-text">Carregando...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-layout">
+        <div class="layout-container">
+
+            <!-- ═══════════════════════════════════════════════
+                 COLUNA ESQUERDA: Configuração do Capítulo
+                 ═══════════════════════════════════════════════ -->
+            <section class="config-panel">
+
+                <!-- 1. Tipo de Documento / Capítulo -->
+                <div class="card-section">
+                    <h2 class="section-title">Documento</h2>
+
+                    <div class="form-group">
+                        <label for="templateSelect" class="form-label">Tipo de produção</label>
+                        <select id="templateSelect" class="form-select">
+                            <!-- Preenchido via JS -->
+                        </select>
+                    </div>
+
+                    <!-- Metadados do template selecionado -->
+                    <div class="template-meta" id="templateMeta">
+                        <div class="template-meta-row">
+                            <span class="badge" id="templateBadge">Carregando...</span>
+                            <span class="template-norma" id="templateNorma"></span>
+                        </div>
+                        <p class="template-desc" id="templateDesc"></p>
+                    </div>
+                </div>
+
+                <!-- 2. Material-fonte (upload duplo para tese) -->
+                <div class="card-section" id="uploadPanel">
+                    <h2 class="section-title">Material-fonte</h2>
+
+                    <!-- Zona A: Fatos do Capítulo (obrigatório) -->
+                    <div class="upload-slot" id="slotFatos">
+                        <div class="upload-slot-header">
+                            <span class="upload-slot-label">Fatos do Capítulo</span>
+                            <span class="upload-slot-badge required">Obrigatório</span>
+                        </div>
+                        <p class="upload-slot-help">Base teórica: referencial bibliográfico, citações, dados e argumentos que o Escriba deve usar como fonte exclusiva de conteúdo.</p>
+                        <div class="dropzone" id="dropzoneFatos" data-slot="fatos">
+                            <input type="file" id="fileInputFatos" multiple accept=".pdf,.txt,.docx" class="file-input-hidden">
+                            <div class="dropzone-content">
+                                <span class="dropzone-icon">
+                                    <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                </span>
+                                <p class="dropzone-text">Arraste o arquivo de fatos aqui</p>
+                                <span class="dropzone-subtext">PDF, DOCX ou TXT — ou clique para procurar</span>
+                            </div>
+                        </div>
+                        <div class="file-list" id="fileListFatos"></div>
+                    </div>
+
+                    <!-- Zona B: Arquivo Modelo (opcional, mas recomendado para teses) -->
+                    <div class="upload-slot" id="slotModelo">
+                        <div class="upload-slot-header">
+                            <span class="upload-slot-label">Arquivo Modelo / Tese</span>
+                            <span class="upload-slot-badge optional">Recomendado</span>
+                        </div>
+                        <p class="upload-slot-help">Capítulos ou introducao já redigidos da tese. Guia o TOM, o ESTILO e o RITMO de escrita. O nome do arquivo deve conter "modelo", "tese" ou "formato".</p>
+                        <div class="dropzone dropzone-secondary" id="dropzoneModelo" data-slot="modelo">
+                            <input type="file" id="fileInputModelo" multiple accept=".pdf,.txt,.docx" class="file-input-hidden">
+                            <div class="dropzone-content">
+                                <span class="dropzone-icon">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                </span>
+                                <p class="dropzone-text">Arraste o modelo da tese aqui</p>
+                                <span class="dropzone-subtext">Opcional — garante consistência de voz e estilo</span>
+                            </div>
+                        </div>
+                        <div class="file-list" id="fileListModelo"></div>
+                    </div>
+
+                    <!-- Requisito do template -->
+                    <div class="requisito-box" id="requisitoBox">
+                        <span class="requisito-label">Requisito do template:</span>
+                        <p class="requirement-text" id="requirementText"></p>
+                    </div>
+                </div>
+
+                <!-- 3. Contexto da Tese -->
+                <div class="card-section" id="contextPanel">
+                    <h2 class="section-title">Contexto acadêmico</h2>
+
+                    <div class="form-group">
+                        <label for="temaGeral" class="form-label">Tema / foco deste capítulo</label>
+                        <input type="text" id="temaGeral"
+                            placeholder="Ex: Práticas curriculares dos professores da EJA no Cerrado goiano"
+                            class="text-input">
+                        <p class="field-help">Descreva o foco específico deste capítulo, não o tema geral da tese.</p>
+                    </div>
+
+                    <!-- Chave da API (se necessário) -->
+                    <div class="form-group" id="apiKeyContainer" style="display: none;">
+                        <label for="apiKeyInput" class="form-label">Chave API Maritaca</label>
+                        <input type="password" id="apiKeyInput" placeholder="Cole sua chave aqui" class="text-input">
+                        <p class="field-help">Chave temporária — não é salva no servidor.</p>
+                    </div>
+
+                    <!-- Configurações avançadas -->
+                    <button class="btn-text-toggle" id="toggleAdvancedBtn">Configuracoes avancadas ▾</button>
+                    <div class="advanced-settings hidden" id="advancedSettings">
+
+                        <div class="adv-grid">
+                            <div class="form-group">
+                                <label for="modelSelect" class="form-label">Modelo de IA</label>
+                                <select id="modelSelect" class="form-select"></select>
+                                <p class="model-caption" id="modelCaption"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="idiomaSelect" class="form-label">Idioma</label>
+                                <select id="idiomaSelect" class="form-select"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="formatoSelect" class="form-label">Exportacao</label>
+                                <select id="formatoSelect" class="form-select"></select>
+                            </div>
+                        </div>
+
+                        <!-- Opções específicas de tese -->
+                        <div class="options-row">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="incluirMarkers">
+                                <span class="checkbox-text">Marcadores de midia [VIDEO] [FIGURA]</span>
+                            </label>
+                        </div>
+
+                        <!-- Memória acadêmica -->
+                        <div class="memory-section">
+                            <h3 class="subsection-title">Memoria academica entre capitulos</h3>
+                            <div class="options-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="usarMemoria" checked>
+                                    <span class="checkbox-text">Usar contexto dos capitulos anteriores</span>
+                                </label>
+                            </div>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="escopoMemoria" value="Tudo" checked>
+                                    <span>Tudo</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="escopoMemoria" value="Última seção">
+                                    <span>Ultima secao</span>
+                                </label>
+                            </div>
+                            <button class="btn-secondary btn-sm mt-2" id="clearMemoryBtn">
+                                Limpar memoria salva (<span id="memoryCount">0</span>)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Seções do Capítulo com sub-chunks visíveis -->
+                <div class="card-section">
+                    <div class="secoes-header">
+                        <h2 class="section-title" id="secoesTitle">Secoes do Capitulo</h2>
+                        <div class="secoes-actions">
+                            <button class="btn-text-mini" id="selectAllSecs">Todas</button>
+                            <button class="btn-text-mini" id="selectNoneSecs">Nenhuma</button>
+                        </div>
+                    </div>
+                    <div class="sections-checklist" id="sectionsChecklist">
+                        <!-- Populado via JS -->
+                    </div>
+                </div>
+
+                <!-- Botão Principal -->
+                <button class="btn-primary" id="btnProcessar">
+                    Iniciar redacao academica
+                </button>
+
+            </section>
+
+            <!-- ═══════════════════════════════════════════════
+                 COLUNA DIREITA: Pipeline, Logs e Resultado
+                 ═══════════════════════════════════════════════ -->
+            <section class="results-panel" id="resultsPanel">
+
+                <!-- Estado Inicial -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 24 24" width="52" height="52" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--verde-escriba);">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                    </div>
+                    <h3>Aguardando material-fonte</h3>
+                    <p>Envie os arquivos, selecione as secoes a gerar e clique em <strong>Iniciar redacao academica</strong>.</p>
+                    <div class="empty-tips">
+                        <div class="tip-item">
+                            <span class="tip-num">1</span>
+                            <span>Fatos guiam o CONTEUDO. Modelo guia o ESTILO.</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-num">2</span>
+                            <span>Cada secao e gerada em micro-chunks iterativos para evitar resumo.</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-num">3</span>
+                            <span>A auditoria de fidelidade verifica toda citacao ABNT ao final.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estado 2: Processando -->
+                <div class="processing-state hidden" id="processingState">
+
+                    <!-- Pipeline de Etapas -->
+                    <div class="pipeline-header">
+                        <h2 class="panel-main-title">Redacao em andamento</h2>
+                        <span class="pipeline-eta" id="pipelineEta">Estimando...</span>
+                    </div>
+
+                    <div class="pipeline-steps">
+                        <div class="pipeline-step" id="card_ingestor">
+                            <div class="step-icon-wrap">
+                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </div>
+                            <div class="step-info">
+                                <strong>Leitura e indexacao da fonte</strong>
+                                <span class="step-desc">Extrai e estrutura o referencial teorico fornecido</span>
+                            </div>
+                            <span class="step-status-badge">Aguardando</span>
+                        </div>
+
+                        <div class="pipeline-step" id="card_comprehension">
+                            <div class="step-icon-wrap">
+                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </div>
+                            <div class="step-info">
+                                <strong>Analise semantica (Bardin)</strong>
+                                <span class="step-desc">Mapeia categorias tematicas, autores e citacoes chave</span>
+                            </div>
+                            <span class="step-status-badge">Aguardando</span>
+                        </div>
+
+                        <div class="pipeline-step" id="card_generator">
+                            <div class="step-icon-wrap">
+                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="step-info">
+                                <strong>Redacao por micro-chunks</strong>
+                                <span class="step-desc">Gera cada sub-secao iterativamente com expansao densa</span>
+                            </div>
+                            <span class="step-status-badge">Aguardando</span>
+                        </div>
+
+                        <div class="pipeline-step" id="card_polisher">
+                            <div class="step-icon-wrap">
+                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg>
+                            </div>
+                            <div class="step-info">
+                                <strong>Auditoria de fidelidade ABNT</strong>
+                                <span class="step-desc">Verifica citacoes, referencias e aderencia ao material-fonte</span>
+                            </div>
+                            <span class="step-status-badge">Aguardando</span>
+                        </div>
+
+                        <div class="pipeline-step" id="card_exporter">
+                            <div class="step-icon-wrap">
+                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </div>
+                            <div class="step-info">
+                                <strong>Exportacao do documento</strong>
+                                <span class="step-desc">Formata e compila o capitulo no formato solicitado</span>
+                            </div>
+                            <span class="step-status-badge">Aguardando</span>
+                        </div>
+                    </div>
+
+                    <!-- Barra de Progresso Global -->
+                    <div class="progress-container">
+                        <div class="progress-labels">
+                            <span class="progress-text" id="progressText">Preparando...</span>
+                            <span class="progress-percent" id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progressBarFill" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Sub-chunk tracker (mostra qual chunk esta sendo gerado) -->
+                    <div class="chunk-tracker" id="chunkTracker">
+                        <div class="chunk-tracker-header">
+                            <h3 class="chunk-tracker-title">Progresso da secao atual</h3>
+                            <span class="chunk-counter" id="chunkCounter">—</span>
+                        </div>
+                        <div class="chunk-bar-container" id="chunkBarContainer">
+                            <!-- Preenchido dinamicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Console de Execução -->
+                    <div class="log-console-container">
+                        <div class="log-console-header">
+                            <h3>Log de execucao</h3>
+                            <button class="btn-text-mini" id="clearLogBtn">Limpar</button>
+                        </div>
+                        <div class="log-console" id="logConsole"></div>
+                    </div>
+                </div>
+
+                <!-- Estado 3: Resultado Completo -->
+                <div class="completed-state hidden" id="completedState">
+
+                    <!-- Cabeçalho de Sucesso -->
+                    <div class="success-header">
+                        <div class="success-header-info">
+                            <span class="success-badge">Geracao concluida</span>
+                            <h2 class="panel-main-title" id="resultTitle">Capitulo gerado</h2>
+                            <p class="success-desc">Redacao auditada com fidelidade ao material-fonte. Revise as secoes e faca o download.</p>
+                        </div>
+                        <button class="btn-download" id="downloadBtn">
+                            <span class="download-icon">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </span>
+                            <div class="download-text-group">
+                                <strong>Baixar capitulo</strong>
+                                <span id="downloadFormatText">DOCX</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Painel de resultado: Abas navegáveis -->
+                    <div class="result-tabs-nav">
+                        <button class="result-nav-tab active" data-panel="texto" id="navTabTexto">Texto do Capitulo</button>
+                        <button class="result-nav-tab" data-panel="analise" id="navTabAnalise">Analise Semantica</button>
+                        <button class="result-nav-tab" data-panel="auditoria" id="navTabAuditoria">Auditoria ABNT</button>
+                    </div>
+
+                    <!-- Painel A: Texto do Capitulo (principal) -->
+                    <div class="result-nav-panel active" id="panelTexto">
+                        <div class="chapter-tabs-header" id="tabsHeader">
+                            <!-- Botoes das secoes -->
+                        </div>
+                        <div class="chapter-tabs-content" id="tabsContent">
+                            <!-- Texto de cada secao -->
+                        </div>
+                    </div>
+
+                    <!-- Painel B: Análise Semântica de Bardin -->
+                    <div class="result-nav-panel hidden" id="panelAnalise">
+                        <div class="analise-grid">
+                            <div class="analise-box analise-classificacao">
+                                <span class="box-tag">Classificacao metodologica</span>
+                                <p class="box-main-value" id="classificationValue">Analise de Conteudo (Bardin)</p>
+                            </div>
+                            <div class="analise-box analise-resumo">
+                                <span class="box-tag">Resumo academico do material-fonte</span>
+                                <p class="box-text-value" id="academicSummaryValue"></p>
+                            </div>
+                        </div>
+
+                        <h4 class="sub-section-title">Categorias tematicas identificadas</h4>
+                        <div class="categories-list" id="categoriesList"></div>
+
+                        <h4 class="sub-section-title mt-3">Banco de citacoes extraidas (material-fonte)</h4>
+                        <p class="field-help">Citacoes literais identificadas no material fornecido e utilizadas na geracao.</p>
+                        <div class="evidence-list" id="evidenceList"></div>
+                    </div>
+
+                    <!-- Painel C: Auditoria ABNT consolidada -->
+                    <div class="result-nav-panel hidden" id="panelAuditoria">
+                        <div class="audit-summary" id="auditSummary">
+                            <!-- Preenchido via JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p><strong>Escriba</strong> — Redacao academica com auditoria de fidelidade por IA</p>
+        <p>Desenvolvido por <strong id="footerAutor">PietroTy</strong> &bull; <span id="footerAno">2025</span> &bull; Motor: <strong>Maritaca Sabia</strong></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -25,7 +25,7 @@ def extract_entities(texto: str, api_key: str, status_callback: Optional[Callabl
     client = openai.OpenAI(api_key=api_key, base_url="https://chat.maritaca.ai/api")
     
     if status_callback:
-        status_callback("🔍 Efetuando NLP Extraction (NER) dos fatos...")
+        status_callback("Efetuando NLP Extraction (NER) dos fatos...")
 
     prompt_extracao = (
         "Leia o texto com absoluta atenção e atue como um bot de Named Entity Recognition.\n"
@@ -115,7 +115,7 @@ def categorize_knowledge_base(texto_fatos: str, api_key: str, status_callback: O
         return modelo_json
 
     if status_callback:
-        status_callback("🔍 Mapeando e Categorizando Fatos do Documento (Agente Classificador)...")
+        status_callback("Mapeando e Categorizando Fatos do Documento (Agente Classificador)...")
 
     try:
         client = openai.OpenAI(api_key=api_key, base_url="https://chat.maritaca.ai/api")

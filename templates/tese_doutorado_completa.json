@@ -1,0 +1,591 @@
+{
+  "id": "tese_doutorado_completa",
+  "nome": "Tese de Doutorado — Estrutura Completa (PUC-SP / ABNT)",
+  "descricao": "Geracao da tese inteira por micro-chunking iterativo: Introducao, 5 Capitulos e Consideracoes Finais. Os prompts sao adaptativos — o Escriba le o material-fonte e extrai o contexto especifico antes de redigir cada secao. Meta: ~240 paginas academicas densas.",
+  "requisitos": "Envie TODOS os arquivos de uma vez: (1) Fatos de cada capitulo — bases teoricas, dados de campo, legislacao, autores; (2) Um arquivo com 'modelo', 'tese' ou 'formato' no nome para guiar o tom e o estilo ABNT. Quanto mais material-fonte, maior a fidelidade.",
+  "norma": "ABNT NBR 14724 / Pos-Graduacao",
+  "prioridade": 1,
+  "status": "funcional",
+  "system_prompt": "Voce e um assistente academico especializado na escrita de teses de Doutorado em Educacao no Brasil, seguindo rigorosamente as normas ABNT NBR 14724. REGRAS ABSOLUTAS: (1) Escrita densa e expansiva — cada sub-secao deve ter de 4 a 6 paragrafos ricos. NUNCA resuma. EXPANDA e APROFUNDE. (2) Fidelidade total — use APENAS os autores, citacoes e dados presentes no material-fonte. PROIBIDO inventar referencias. (3) Citacoes ABNT — diretas com aspas duplas e (Autor, Ano, p. XX); indiretas com (Autor, Ano). (4) Voz academica — 3a pessoa alternada com 1a pessoa do plural reflexivo. (5) Transicao fluida — cada sub-secao inicia com paragrafo de transicao e encerra apontando para o proximo topico. (6) Adaptacao ao contexto — leia o material-fonte e identifique o tema, os autores centrais e o campo empirico ANTES de redigir.",
+  "max_tokens_geracao": 4096,
+  "secoes": [
+    {
+      "id": "intro_apresentacao",
+      "numero": 1,
+      "titulo": "Introducao — Apresentacao e Contextualizacao",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie a APRESENTACAO da tese. Leia o material-fonte e identifique: o tema central, o problema de pesquisa e o campo empirico. Com base nesses elementos, redija de 4 a 5 paragrafos academicos que: (a) situem o tema no contexto educacional e social brasileiro contemporaneo; (b) explicitem o problema de pesquisa e sua relevancia; (c) apresentem os objetivos geral e especificos da tese; (d) descrevam a estrutura dos capitulos. Use o arquivo modelo para calibrar o tom narrativo.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Continuando de forma absolutamente fluida, desenvolva a JUSTIFICATIVA da pesquisa em 3 a 4 paragrafos: por que este tema e urgente neste momento historico? Quais lacunas na literatura justificam esta investigacao? Quais grupos sociais serao beneficiados pelos resultados? Fundamente com autores e dados presentes no material-fonte.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "intro_trajetoria",
+      "numero": 2,
+      "titulo": "Introducao — Trajetoria do(a) Pesquisador(a)",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Redija a secao de TRAJETORIA DO PESQUISADOR. Esta e uma secao autobiografica e reflexiva. Com base nos elementos presentes no material-fonte (vivencias, inquietacoes profissionais, experiencias docentes), escreva de 4 a 5 paragrafos em primeira pessoa do singular que: (a) narrem o percurso profissional e academico do pesquisador; (b) explicitem as inquietacoes que motivaram a pesquisa; (c) estabelecam o nexo entre a trajetoria vivida e o objeto de estudo. Copie o tom de confidencia do arquivo modelo se presente.",
+          "required_keys": [
+            "biografia_pesquisador"
+          ]
+        },
+        {
+          "comando": "Continuando de forma fluida, aprofunde a relacao entre a trajetoria narrada e as tensoes observadas no campo empírico. Mostre como as experiencias profissionais geraram perguntas que a academia ainda nao respondeu satisfatoriamente. Conclua com a decisao de realizar esta pesquisa como ato politico e intelectual. De 3 a 4 paragrafos.",
+          "required_keys": [
+            "biografia_pesquisador",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "intro_revisao",
+      "numero": 3,
+      "titulo": "Introducao — Revisao de Literatura",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie a REVISAO DE LITERATURA da introducao. Identifique no material-fonte os PRIMEIROS autores e obras que fundamentam o campo tematico central da tese. Escreva de 4 a 5 paragrafos dissecando essas contribuicoes: (a) apresente o axioma ou tese central de cada autor; (b) discuta como essa teoria se aplica ao problema empirico investigado; (c) estabeleca o dialogo entre os autores, mostrando convergencias e tensoes teoricas.",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Continuando fluentemente, identifique o SEGUNDO eixo tematico do referencial (ex: politicas publicas, curriculo, educacao ambiental, metodologia). Escreva de 4 a 5 paragrafos desenvolvendo este pilar de forma contígua e aprofundada. Proibido name-dropping: desenvolva cada autor com densidade antes de passar ao proximo.",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao"
+          ]
+        },
+        {
+          "comando": "Para encerrar a revisao de literatura da introducao, apresente as LACUNAS identificadas na producao existente: o que esta pesquisa faz que as anteriores nao fizeram? Articule com o terceiro eixo tematico do material-fonte (dados empiricos, campo, sujeitos). Finalize com a sintese que justifica a contribuicao original desta tese. De 3 a 4 paragrafos.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "intro_sintese",
+      "numero": 4,
+      "titulo": "Introducao — Breve Sintese",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Redija a BREVE SINTESE conclusiva da Introducao em 3 paragrafos: (1) retome o problema e os objetivos; (2) sintetize os pilares teoricos que sustentam a investigacao; (3) apresente a estrutura dos capitulos e o que o leitor encontrara em cada um deles. Mantenha tom academico e prospectivo.",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap1_abertura",
+      "numero": 5,
+      "titulo": "Capitulo 1 — Abertura e Contextualizacao",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie o CAPITULO 1 com uma abertura que: (a) apresente o titulo do capitulo com base no material-fonte; (b) contextualize historicamente o campo tematico central (educacao, curriculo, EJA ou equivalente identificado no material); (c) apresente o arcabouco legal pertinente (Constituicao Federal, LDB, PNE ou outros documentos presentes nos fatos); (d) anuncie as secoes do capitulo. De 4 a 5 paragrafos densos.",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap1_educacao_curriculo",
+      "numero": 6,
+      "titulo": "Capitulo 1 — Educacao, Curriculo e Conceitos Fundamentais",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a primeira subsecao do Capitulo 1: os CONCEITOS FUNDAMENTAIS de educacao e curriculo identificados no material-fonte. Escreva de 4 a 5 paragrafos aprofundando: (a) o conceito de educacao como direito, cidadania e emancipacao; (b) as tensoes entre educacao bancaria e educacao dialogica; (c) o papel do professor como intelectual transformador. Use APENAS os autores presentes no material-fonte com citacoes ABNT.",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao"
+          ]
+        },
+        {
+          "comando": "Continuando fluentemente, desenvolva de 4 a 5 paragrafos sobre o CURRICULO como campo de disputa politica: (a) definicoes e dimensoes do curriculo (prescrito, real, oculto); (b) curriculo como construcao social nao neutra; (c) tensoes entre curriculo monocultural e curriculo integrado/critico. Fundamente nos autores do material-fonte.",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Finalize esta subsecao articulando em 3 a 4 paragrafos como os conceitos de educacao emancipatoria e curriculo critico se relacionam com o publico especifico investigado nesta tese (identificado no material-fonte). Faca a transicao para a proxima subsecao.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap1_eja_curriculo",
+      "numero": 7,
+      "titulo": "Capitulo 1 — O Campo Especifico: Curriculo em Disputa",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie a segunda subsecao do Capitulo 1 sobre o CAMPO ESPECIFICO DA PESQUISA (EJA, educacao basica, ensino profissional ou o campo identificado no material). Desenvolva de 4 a 5 paragrafos: (a) historico e caracterizacao deste campo educacional; (b) seus sujeitos e especificidades; (c) as politicas publicas que o regulamentam. Baseie-se exclusivamente nos autores e dados do material-fonte.",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Continuando fluentemente, aprofunde em 4 a 5 paragrafos as DISPUTAS CURRICULARES neste campo: quais conhecimentos sao valorizados, quais sao silenciados, quais grupos se beneficiam do curriculo hegemônico e quais resistem. Use autores de teoria critica do curriculo presentes no material.",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap1_praticas_resistencia",
+      "numero": 8,
+      "titulo": "Capitulo 1 — Praticas Curriculares, Sujeitos e Movimentos de Resistencia",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a subsecao sobre PRATICAS CURRICULARES DOS PROFESSORES: (a) distincao entre curriculo prescrito e curriculo vivido; (b) o professor como sujeito do curriculo; (c) precarizacao do trabalho docente e suas implicacoes nas praticas. Cite os autores do material-fonte. De 4 a 5 paragrafos.",
+          "required_keys": [
+            "referencial_teorico",
+            "praticas_curriculares"
+          ]
+        },
+        {
+          "comando": "Continuando, apresente em 3 a 4 paragrafos os MOVIMENTOS DE RESISTENCIA E FÓRUNS identificados no material-fonte: como os educadores organizam resistencia ao curriculo hegemônico? Quais experiencias coletivas e movimentos sociais sustentam uma educacao emancipatoria neste campo?",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Sintetize o Capitulo 1 em 3 a 4 paragrafos articulando os tres eixos trabalhados. Reafirme a centralidade do tema para a tese e projete de forma academica o que o Capitulo 2 aprofundara.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap2_questao_ambiental",
+      "numero": 9,
+      "titulo": "Capitulo 2 — A Questao Ambiental: Desafios Contemporaneos",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie o CAPITULO 2. Identifique no material-fonte o SEGUNDO EIXO TEMATICO da tese (questao ambiental, politicas publicas, formacao docente ou equivalente). Desenvolva de 4 a 5 paragrafos: (a) diagnostico da problematica em escala global e nacional; (b) dados e evidencias empiricas presentes nos fatos; (c) tensoes entre modelo de desenvolvimento hegemônico e alternativas sustentaveis.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Continuando, aprofunde em 3 a 4 paragrafos como essa problematica se manifesta no TERRITORIO ESPECIFICO da pesquisa (estado, municipio, bioma ou regiao identificada no material). Use dados concretos do material-fonte.",
+          "required_keys": [
+            "contexto_global",
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Conclua a abertura do Capitulo 2 em 3 paragrafos estabelecendo a relacao entre a problematica macroestrutural e a urgencia de respostas educacionais. Introduza o campo da EDUCACAO como espaco de disputa e transformacao.",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap2_politicas_curriculares",
+      "numero": 10,
+      "titulo": "Capitulo 2 — Politicas Curriculares e Arcabouco Legal",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a subsecao sobre o ARCABOUCO LEGAL E NORMATIVO identificado no material-fonte para o eixo tematico do Capitulo 2. Escreva de 4 a 5 paragrafos analisando as principais leis, resolucoes, diretrizes e programas que regulamentam este campo. Avalie os avancos e as contradicoes entre o texto legal e a pratica.",
+          "required_keys": [
+            "legislacao",
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Continuando, analise em 3 a 4 paragrafos como essas POLITICAS CURRICULARES dialogam (ou falham em dialogar) com as especificidades do campo educacional investigado. Discuta as tensoes entre politicas universais e as necessidades dos sujeitos concretos.",
+          "required_keys": [
+            "legislacao",
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Conclua a subsecao em 3 paragrafos identificando as LACUNAS das politicas publicas existentes e preparando o leitor para a analise da formacao docente como no central do problema.",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap2_formacao_docente",
+      "numero": 11,
+      "titulo": "Capitulo 2 — A Formacao dos Professores",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a subsecao sobre FORMACAO DOCENTE no contexto do eixo tematico do Capitulo 2. Escreva de 4 a 5 paragrafos: (a) limites da formacao inicial para este campo especifico; (b) as consequencias dessas lacunas nas praticas pedagogicas; (c) a formacao continuada como processo reflexivo, nao mero treinamento tecnico. Use os autores do material-fonte.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Continuando, contextualize em 3 paragrafos o PERFIL DOCENTE do campo investigado (carga horaria, vinculo, formacao, condicoes de trabalho) com base nos dados do material-fonte. Articule precariedade e ausencia de formacao especifica como problemas que se reinforcam mutuamente.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap2_direito_sujeitos",
+      "numero": 12,
+      "titulo": "Capitulo 2 — Direitos, Sujeitos e Sintese do Capitulo",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a subsecao sobre o tema como DIREITO DOS SUJEITOS. Com base no material-fonte, escreva de 4 a 5 paragrafos: (a) o tema do capitulo como direito fundamental (constitucional ou humano); (b) como a negacao deste direito afeta desproporcionalmente os grupos vulneraveis; (c) o conceito de justica social/ambiental/curricular aplicado ao campo investigado.",
+          "required_keys": [
+            "legislacao",
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Sintetize o Capitulo 2 em 3 a 4 paragrafos articulando os quatro eixos trabalhados. Reafirme a contribuicao deste capitulo para o argumento central da tese e projete o que o Capitulo 3 aprofundara.",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap3_apresentacao_pacto",
+      "numero": 13,
+      "titulo": "Capitulo 3 — Apresentacao do Programa/Politica Central da Pesquisa",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie o CAPITULO 3. Identifique no material-fonte o PROGRAMA, POLITICA OU INICIATIVA que e o objeto central de analise da tese (Pacto, Programa Nacional, Iniciativa Governamental ou equivalente). Desenvolva de 4 a 5 paragrafos: (a) origem historica e contexto de criacao; (b) objetivos declarados e publico-alvo; (c) estrutura organizacional e financiamento.",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Continuando, analise em 3 a 4 paragrafos a RECEPCAO POLITICA E ACADEMICA deste programa: quais grupos apoiam, quais criticam e por que? Quais tensoes emergiram entre a proposta e sua implementacao?",
+          "required_keys": [
+            "referencial_teorico",
+            "legislacao"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap3_legislacao_documentos",
+      "numero": 14,
+      "titulo": "Capitulo 3 — Legislacao e Documentos Estruturantes",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a subsecao sobre LEGISLACAO E DOCUMENTOS que sustentam o programa/politica analisado. Escreva de 4 a 5 paragrafos analisando cada documento relevante presente no material-fonte: decretos, resolucoes, portarias, cadernos formativos. Avalie a coerencia entre os principios declarados e as orientacoes praticas.",
+          "required_keys": [
+            "legislacao",
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Continuando, analise em 3 a 4 paragrafos as CONTRADICOES E TENSOES identificadas na legislacao: onde o texto legal abre espacos para praticas emancipatorias e onde os fecha? Como os educadores interpretam e reinterpretam esses documentos no cotidiano?",
+          "required_keys": [
+            "legislacao",
+            "referencial_teorico"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap3_aspectos_curriculares",
+      "numero": 15,
+      "titulo": "Capitulo 3 — Aspectos Curriculares do Programa",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a subsecao sobre os ASPECTOS CURRICULARES do programa/politica investigado. Escreva de 4 a 5 paragrafos: (a) como o curriculo e concebido no programa; (b) quais conhecimentos sao priorizados e quais sao silenciados; (c) como o curriculo prescrito do programa se relaciona com as praticas curriculares reais dos professores.",
+          "required_keys": [
+            "referencial_teorico",
+            "praticas_curriculares",
+            "legislacao"
+          ]
+        },
+        {
+          "comando": "Continuando, apresente em 3 a 4 paragrafos as EXPERIENCIAS EXITOSAS identificadas no material-fonte: casos concretos, premiacoes, projetos bem-sucedidos. O que torna essas experiencias bem-sucedidas? Que condicoes as possibilitaram?",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Sintetize o Capitulo 3 em 3 paragrafos. Reafirme como a analise deste programa/politica ilumina o problema de pesquisa da tese. Projete o Capitulo 4 (metodologia) como o caminho para investigar empiricamente estas questoes.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap4_metodologia",
+      "numero": 16,
+      "titulo": "Capitulo 4 — Escolhas Metodologicas e Fundamentos",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie o CAPITULO 4: PRESSUPOSTOS TEORICO-METODOLOGICOS. Desenvolva de 4 a 5 paragrafos justificando a ABORDAGEM METODOLOGICA escolhida: (a) o paradigma epistemologico que sustenta a pesquisa (pesquisa qualitativa, critico-dialectica, fenomenologica ou outra identificada no material); (b) os autores de referencia em metodologia presentes nos fatos; (c) por que esta abordagem e a mais adequada para o objeto de pesquisa.",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Continuando, detalhe em 3 a 4 paragrafos os INSTRUMENTOS E PROCEDIMENTOS de producao de dados: quais instrumentos foram usados (entrevistas, questionarios, observacao, analise documental ou outros identificados no material)? Como foram aplicados? Quais criterios orientaram as escolhas?",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap4_contexto_sujeitos",
+      "numero": 17,
+      "titulo": "Capitulo 4 — Contexto da Pesquisa e Sujeitos",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a subsecao sobre o CONTEXTO DA PESQUISA. Com base nos dados do material-fonte, escreva de 4 a 5 paragrafos caracterizando: (a) o territorio (municipio, estado, regiao, instituicao); (b) dados socioeconomicos e educacionais relevantes; (c) as especificidades do contexto que influenciaram o desenho da pesquisa.",
+          "required_keys": [
+            "contexto_global",
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Continuando, caracterize em 3 a 4 paragrafos OS SUJEITOS DA PESQUISA: quem sao, quantos, como foram selecionados, quais seus perfis (formacao, tempo de experiencia, vinculo). Justifique os criterios de selecao com base no referencial metodologico.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap4_analise_dados",
+      "numero": 18,
+      "titulo": "Capitulo 4 — Producao, Organizacao e Analise dos Dados",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a subsecao sobre PRODUCAO E ORGANIZACAO DOS DADOS: como os dados foram gerados, registrados, organizados e sistematizados. Descreva o processo cronologico de campo, os desafios enfrentados e as adaptacoes realizadas. De 4 a 5 paragrafos.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Desenvolva a subsecao sobre o METODO DE ANALISE DOS DADOS: qual metodologia de analise foi utilizada (Analise de Conteudo de Bardin, Analise do Discurso, Grounded Theory ou outra identificada no material)? Quais categorias emergiram? Como se deu o processo de categorizacao? De 4 a 5 paragrafos com fundamento nos autores metodologicos do material.",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Sintetize o Capitulo 4 em 3 paragrafos articulando metodologia, contexto e sujeitos. Mostre como as escolhas metodologicas garantem a rigorosidade e a etica da investigacao. Projete o Capitulo 5 como o espaco dos resultados.",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap5_concepcoes",
+      "numero": 19,
+      "titulo": "Capitulo 5 — Concepcoes, Conhecimentos e Compreensoes dos Sujeitos",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Inicie o CAPITULO 5: RESULTADOS E DISCUSSOES. Apresente a PRIMEIRA CATEGORIA DE ANALISE identificada nos dados de campo (concepcoes, conhecimentos, compreensoes ou equivalente emergido dos dados). Desenvolva de 4 a 5 paragrafos: (a) como esta categoria emergiu dos dados; (b) o que os sujeitos disseram/fizeram; (c) o dialogo com o referencial teorico dos capitulos anteriores.",
+          "required_keys": [
+            "referencial_teorico",
+            "praticas_curriculares",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Continuando, aprofunde em 3 a 4 paragrafos as TENSOES E CONTRADICOES identificadas nesta categoria: onde ha coerencia entre discurso e pratica? Onde ha ruptura? Como os sujeitos explicam essas tensoes?",
+          "required_keys": [
+            "praticas_curriculares",
+            "referencial_teorico"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap5_formacao_praticas",
+      "numero": 20,
+      "titulo": "Capitulo 5 — Formacao Continuada e Praticas Curriculares em Campo",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a SEGUNDA CATEGORIA DE ANALISE sobre FORMACAO CONTINUADA identificada nos dados. Escreva de 4 a 5 paragrafos articulando: (a) como os sujeitos avaliam a formacao recebida; (b) que lacunas identificam; (c) como a formacao (ou sua ausencia) se manifesta nas praticas curriculares observadas.",
+          "required_keys": [
+            "referencial_teorico",
+            "praticas_curriculares"
+          ]
+        },
+        {
+          "comando": "Continuando, desenvolva a TERCEIRA CATEGORIA sobre PRATICAS CURRICULARES CONCRETAS dos professores no campo especifico da pesquisa. Escreva de 4 a 5 paragrafos: (a) descreva as praticas observadas/relatadas; (b) classifique-as (emancipatorias, conservadoras, hibridas); (c) dialogue com o referencial dos capitulos anteriores.",
+          "required_keys": [
+            "praticas_curriculares",
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap5_curriculo_avaliado",
+      "numero": 21,
+      "titulo": "Capitulo 5 — Curriculo Avaliado e Discussao Final dos Resultados",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva a QUARTA CATEGORIA DE ANALISE sobre o CURRICULO AVALIADO: como os sujeitos avaliam o curriculo que implementam? Quais aspectos consideram adequados, quais criticam, quais gostariam de transformar? De 4 a 5 paragrafos dialogando com o referencial.",
+          "required_keys": [
+            "praticas_curriculares",
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Realize a DISCUSSAO FINAL DOS RESULTADOS em 4 a 5 paragrafos: (a) articule as quatro categorias entre si; (b) responda ao problema de pesquisa com base nos dados; (c) identifique os avances e os limites desta investigacao.",
+          "required_keys": [
+            "referencial_teorico",
+            "praticas_curriculares",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Sintetize o Capitulo 5 em 3 paragrafos: o que os resultados confirmam do referencial teorico e o que o surpreende? Qual e a contribuicao desta pesquisa para o campo? Projete as Consideracoes Finais.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conclusao_sintese",
+      "numero": 22,
+      "titulo": "Consideracoes Finais — Sintese e Contribuicoes",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Redija as CONSIDERACOES FINAIS da tese. Escreva de 4 a 5 paragrafos que: (a) retomem o problema de pesquisa e os objetivos; (b) sintetizem as principais conclusoes de cada capitulo; (c) respondam de forma clara e fundamentada ao problema de pesquisa; (d) avaliem se os objetivos foram alcancados.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        },
+        {
+          "comando": "Continuando, desenvolva em 3 a 4 paragrafos as CONTRIBUICOES E IMPLICACOES da pesquisa: (a) contribuicoes teoricas — o que esta tese acrescenta ao campo do conhecimento; (b) contribuicoes praticas — o que pode ser transformado na realidade investigada a partir destes resultados; (c) implicacoes para politicas publicas.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conclusao_agenda",
+      "numero": 23,
+      "titulo": "Consideracoes Finais — Limitacoes e Agenda de Pesquisa",
+      "obrigatorio": true,
+      "skeleton_expansion": true,
+      "sub_prompts": [
+        {
+          "comando": "Desenvolva em 3 paragrafos as LIMITACOES desta pesquisa: o que nao foi possivel investigar? Quais escolhas metodologicas restringiram o alcance dos resultados? Faca isso com honestidade epistemica, sem depreciar a pesquisa.",
+          "required_keys": [
+            "referencial_teorico"
+          ]
+        },
+        {
+          "comando": "Finalize a tese em 3 paragrafos com a AGENDA DE PESQUISA FUTURA: quais questoes emergem dos resultados e aguardam investigacao? Quais novos campos, sujeitos ou metodologias poderiam aprofundar este tema? Encerre com uma afirmacao propositiva sobre a relevancia do tema para a educacao brasileira.",
+          "required_keys": [
+            "referencial_teorico",
+            "contexto_global"
+          ]
+        }
+      ]
+    }
+  ],
+  "exportacao": {
+    "formatos_suportados": [
+      "docx",
+      "pdf",
+      "txt",
+      "tex"
+    ],
+    "formato_padrao": "docx"
+  }
+}

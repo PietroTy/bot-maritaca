@@ -114,7 +114,7 @@ def polish(
 
     for i, secao in enumerate(secoes_geradas):
         if status_callback:
-            status_callback(f"🔬 Auditando integridade: {secao.secao_titulo}...")
+            status_callback(f"Auditando integridade: {secao.secao_titulo}...")
 
         audit_report = _double_check(client, secao.texto, texto_fonte, modelo_auditoria)
 

@@ -4,13 +4,44 @@
   "descricao": "Geração de resenhas críticas conforme convenção acadêmica.",
   "requisitos": "Escriba precisa de: Texto da obra + seu posicionamento/critica anotado. O Escriba estrutura a análise, mas não julga sozinho.",
   "norma": "Convenção acadêmica",
-  "prioridade": 6,
+  "prioridade": 7,
   "status": "placeholder",
   "secoes": [
-    { "id": "referencia", "numero": 0, "titulo": "Referência da Obra", "obrigatorio": true, "prompt": "[PLACEHOLDER]" },
-    { "id": "sintese", "numero": 1, "titulo": "Síntese", "obrigatorio": true, "prompt": "[PLACEHOLDER]" },
-    { "id": "critica", "numero": 2, "titulo": "Crítica", "obrigatorio": true, "prompt": "[PLACEHOLDER]" },
-    { "id": "conclusao", "numero": 3, "titulo": "Conclusão", "obrigatorio": true, "prompt": "[PLACEHOLDER]" }
+    {
+      "id": "referencia",
+      "numero": 0,
+      "titulo": "Referência da Obra",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER]"
+    },
+    {
+      "id": "sintese",
+      "numero": 1,
+      "titulo": "Síntese",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER]"
+    },
+    {
+      "id": "critica",
+      "numero": 2,
+      "titulo": "Crítica",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER]"
+    },
+    {
+      "id": "conclusao",
+      "numero": 3,
+      "titulo": "Conclusão",
+      "obrigatorio": true,
+      "prompt": "[PLACEHOLDER]"
+    }
   ],
-  "exportacao": { "formatos_suportados": ["txt", "docx", "pdf"], "formato_padrao": "pdf" }
+  "exportacao": {
+    "formatos_suportados": [
+      "txt",
+      "docx",
+      "pdf"
+    ],
+    "formato_padrao": "pdf"
+  }
 }

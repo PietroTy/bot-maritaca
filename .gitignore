@@ -7,3 +7,4 @@ node_modules/
 start.bat
 __pycache__/
 *.pyc
+.venv/
