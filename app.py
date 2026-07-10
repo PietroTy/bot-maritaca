@@ -1,6 +1,6 @@
 """
 app.py — Orquestrador Principal / Interface Streamlit (Tese de Doutorado)
-Escriba v2.0
+Escriba
 """
 
 import streamlit as st
@@ -19,6 +19,7 @@ from modules.polisher import polish
 import modules.exporter as exporter_mod
 from modules.exporter import export
 import config
+importlib.reload(config)
 
 # Inicializa diretórios
 persistence.ensure_dir()
@@ -26,9 +27,15 @@ persistence.ensure_dir()
 # ──────────────────────────────────────────────────────────────────
 # Configuração da página
 # ──────────────────────────────────────────────────────────────────
+from PIL import Image
+try:
+    favicon = Image.open("favicon.png")
+except Exception:
+    favicon = None
+
 st.set_page_config(
     page_title=config.APP_NOME,
-    page_icon=None,
+    page_icon=favicon,
     layout="wide",
     initial_sidebar_state="expanded",
 )

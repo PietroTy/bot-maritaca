@@ -1,5 +1,5 @@
 """
-config.py — Configuração Central do Escriba v2.0
+config.py — Configuração Central do Escriba
 Gerencia modelos, custos, variáveis de ambiente e constantes do projeto.
 """
 
@@ -101,7 +101,7 @@ def carregar_template(template_id: str) -> dict:
 # ──────────────────────────────────────────
 # Constantes de UI
 # ──────────────────────────────────────────
-APP_NOME = "Escriba v2.0"
+APP_NOME = "Escriba"
 APP_SUBTITULO = "Central modular de processamento acadêmico com IA"
 APP_AUTOR = "PietroTy"
 APP_ANO = "2025"

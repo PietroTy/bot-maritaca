@@ -1,6 +1,6 @@
 """
 modules/generator.py — Módulo 3: Pipeline de Geração Agêntica
-Escriba v2.0
+Escriba
 
 ESTADO ATUAL: Funcional — geração real via API Maritaca (sabiazinho-4).
 ROADMAP: Implementar Chain-of-Verification (CoVe) completo
@@ -46,7 +46,7 @@ def _build_system_prompt() -> str:
         "material-fonte fornecido, cite a norma de forma genérica (ex: 'nos termos da legislação vigente', 'conforme o plano nacional de educação em vigor', "
         "'segundo a política nacional de educação ambiental') e JAMAIS fabrique um identificador. A violação desta regra invalida toda a seção.\n"
         "4. **Isolamento de Escopo:** Concentre-se EXCLUSIVAMENTE em desenvolver os dados do prompt atual. Nunca antecipe ou nomeie os assuntos do próximo capítulo no final do texto gerado, nem antecipe metodologias ou tópicos futuros.\n"
-        "5. **Limpeza de Assinatura:** NUNCA inclua cabeçalhos, rodapés ou metadados como 'Escriba v2.0', 'Página X' ou tags de sistema. "
+        "5. **Limpeza de Assinatura:** NUNCA inclua cabeçalhos, rodapés ou metadados como 'Escriba', 'Página X' ou tags de sistema. "
         "O texto deve começar e terminar com conteúdo acadêmico puro.\n"
         "6. **Anti-Tique de Persona — REGRA DE ESTILO CRÍTICA:** É TERMINANTEMENTE PROIBIDO iniciar qualquer parágrafo com verbos mentais ou declarativos "
         "na primeira pessoa, tais como: 'Compreendo que', 'Reconheço que', 'Analiso que', 'Observo que', 'Percebo que', 'Constato que', 'Noto que', "

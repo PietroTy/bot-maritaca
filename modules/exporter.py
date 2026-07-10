@@ -1,6 +1,6 @@
 """
 modules/exporter.py — Módulo 5: Exportação de Documentos
-Escriba v2.0
+Escriba
 
 ESTADO ATUAL: Exportação funcional para PDF (ReportLab) e TXT.
 ROADMAP: 
@@ -83,7 +83,7 @@ def _gerar_pdf(secoes: list, tema: str, idioma: str) -> bytes:
         canvas.setFont(base_font, 8)
         canvas.setFillColorRGB(0.4, 0.4, 0.4)
         canvas.drawCentredString(w / 2.0, 20,
-            f"Escriba v2.0 — {tema}    •    Página {doc.page}")
+            f"Escriba — {tema}    •    Página {doc.page}")
         canvas.restoreState()
 
     story = []
@@ -200,7 +200,7 @@ def _gerar_tex(secoes: list, tema: str, idioma: str) -> bytes:
         r"\geometry{a4paper, margin=2.5cm}",
         r"\begin{document}",
         r"\begin{center}",
-        rf"\textbf{{\LARGE Escriba v2.0}}\\[0.5em]",
+        rf"\textbf{{\LARGE Escriba}}\\[0.5em]",
         rf"\textbf{{\large {tema}}}\\[0.3em]",
         rf"\small Idioma: {idioma} | Gerado: {datetime.utcnow().strftime('%Y-%m-%d')}",
         r"\end{center}",
